@@ -10,15 +10,15 @@ import javax.sql.DataSource;
 
 @SpringBootApplication
 @Log
-public class DbworkApplication implements CommandLineRunner {
+public class PointsApiApplication implements CommandLineRunner {
 	private final DataSource dataSource;
 
-	public DbworkApplication(final DataSource dataSource) {
+	public PointsApiApplication(final DataSource dataSource) {
 		this.dataSource = dataSource;
 	}
 
 	public static void main(String[] args) {
-		SpringApplication.run(DbworkApplication.class, args);
+		SpringApplication.run(PointsApiApplication.class, args);
 	}
 
 	@Override

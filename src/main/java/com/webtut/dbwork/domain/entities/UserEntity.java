@@ -1,5 +1,6 @@
-package com.webtut.dbwork.domain;
+package com.webtut.dbwork.domain.entities;
 
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,8 +10,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class User {
+@Entity
+@Table(name = "users")
+public class UserEntity {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_id_seq")
     private Long userId;
 
     private String login;
