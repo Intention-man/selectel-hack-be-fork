@@ -4,19 +4,18 @@ import com.webtut.dbwork.domain.dto.PointDto;
 import com.webtut.dbwork.domain.entities.PointEntity;
 import com.webtut.dbwork.mappers.Mapper;
 import com.webtut.dbwork.services.PointService;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
 public class PointController {
 
     private final PointService pointService;
-
     private final Mapper<PointEntity, PointDto> pointMapper;
 
     public PointController(PointService pointService, Mapper<PointEntity, PointDto> pointMapper) {
@@ -33,9 +32,9 @@ public class PointController {
     }
 
     @GetMapping(path = "/points")
-    public Page<PointDto> listPoints(Pageable pageable) {
-        Page<PointEntity> points = pointService.findAll(pageable);
-        return points.map(pointMapper::mapTo) ;
+    public List<PointDto> listPoints() {
+        List<PointEntity> points = pointService.findAll();
+        return points.stream().map(pointMapper::mapTo).toList();
     }
 
     @GetMapping(path = "/points/{point_id}")
@@ -50,7 +49,7 @@ public class PointController {
     @PutMapping(path = "/points/{point_id}")
     public ResponseEntity<PointDto> save(
             @PathVariable("point_id") Long pointId,
-            @RequestBody PointDto pointDto){
+            @RequestBody PointDto pointDto) {
 
         PointEntity pointEntity = pointMapper.mapFrom(pointDto);
         boolean pointExist = pointService.isExists(pointId);
@@ -58,7 +57,7 @@ public class PointController {
         PointEntity savedPointEntity = pointService.save(pointEntity);
         PointDto savedUpdatedPoint = pointMapper.mapTo(savedPointEntity);
 
-        if (pointExist){
+        if (pointExist) {
             return new ResponseEntity<>(savedUpdatedPoint, HttpStatus.OK);
         }
         return new ResponseEntity<>(savedUpdatedPoint, HttpStatus.CREATED);
@@ -67,9 +66,9 @@ public class PointController {
     @PatchMapping(path = "/points/{point_id}")
     public ResponseEntity<PointDto> partialUpdatePoint(
             @PathVariable("point_id") Long pointId,
-            @RequestBody PointDto pointDto){
+            @RequestBody PointDto pointDto) {
 
-        if (pointService.isExists(pointId)){
+        if (pointService.isExists(pointId)) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 

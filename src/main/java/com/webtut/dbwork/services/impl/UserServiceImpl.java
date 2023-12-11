@@ -1,5 +1,6 @@
 package com.webtut.dbwork.services.impl;
 
+import com.webtut.dbwork.config.MapperConfig;
 import com.webtut.dbwork.domain.entities.UserEntity;
 import com.webtut.dbwork.repositories.UserRepository;
 import com.webtut.dbwork.services.UserService;
@@ -12,20 +13,19 @@ import java.util.stream.StreamSupport;
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final MapperConfig mapperConfig;
 
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, MapperConfig mapperConfig) {
         this.userRepository = userRepository;
+        this.mapperConfig = mapperConfig;
     }
+
 
     @Override
     public UserEntity save(UserEntity userEntity) {
         return userRepository.save(userEntity);
     }
 
-    @Override
-    public List<UserEntity> findAll() {
-        return StreamSupport.stream(userRepository.findAll().spliterator(), false).toList();
-    }
 
     @Override
     public Optional<UserEntity> findById(Long userId) {
@@ -37,6 +37,20 @@ public class UserServiceImpl implements UserService {
         return !userRepository.existsById(userId);
     }
 
+    @Override
+    public boolean isExists(UserEntity userEntity) {
+        Optional<UserEntity> optionalUser = userRepository.existsByLogin(userEntity.getLogin());
+        if (optionalUser.isPresent()){
+            UserEntity foundUser = optionalUser.get();
+            return mapperConfig.encoder().matches(userEntity.getPassword(), foundUser.getPassword());
+        }
+        return false;
+    }
+
+    @Override
+    public List<UserEntity> findAll() {
+        return StreamSupport.stream(userRepository.findAll().spliterator(), false).toList();
+    }
     @Override
     public UserEntity partialUpdate(Long userId, UserEntity userEntity) {
         userEntity.setUserId(userId);

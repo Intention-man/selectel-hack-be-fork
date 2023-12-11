@@ -14,5 +14,4 @@ public interface PointRepository extends CrudRepository<PointEntity, Long>,
     @Query("SELECT p from PointEntity p where p.inside = true")
     Iterable<PointEntity> findAllInside();
 
-
 }

@@ -1,5 +1,6 @@
 package com.webtut.dbwork.controllers;
 
+import com.webtut.dbwork.config.MapperConfig;
 import com.webtut.dbwork.domain.dto.UserDto;
 import com.webtut.dbwork.domain.entities.UserEntity;
 import com.webtut.dbwork.mappers.Mapper;
@@ -12,31 +13,44 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
 public class UserController {
 
     private final UserService userService;
     private final Mapper<UserEntity, UserDto> userMapper;
+    private final MapperConfig mapperConfig;
 
-    public UserController(UserService userService, Mapper<UserEntity, UserDto> userMapper){
+    public UserController(UserService userService, Mapper<UserEntity, UserDto> userMapper, MapperConfig mapperConfig) {
         this.userService = userService;
         this.userMapper = userMapper;
+        this.mapperConfig = mapperConfig;
+    }
+
+    @PostMapping(path = "/auth")
+    public ResponseEntity<Boolean> checkAuth(@RequestBody UserDto userDto) {
+        UserEntity userEntity = userMapper.mapFrom(userDto);
+        if (userService.isExists(userEntity)) {
+            return new ResponseEntity<>(true, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(false, HttpStatus.UNAUTHORIZED);
     }
 
     @PostMapping(path = "/users")
-    public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto){
+    public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto) {
         UserEntity userEntity = userMapper.mapFrom(userDto);
+        userEntity.setPassword(mapperConfig.encoder().encode(userEntity.getPassword()));
         UserEntity savedUserEntity = userService.save(userEntity);
         return new ResponseEntity<>(userMapper.mapTo(savedUserEntity), HttpStatus.CREATED);
     }
 
     @GetMapping(path = "/users")
-    public List<UserDto> listUsers(){
+    public List<UserDto> listUsers() {
         List<UserEntity> users = userService.findAll();
         return users.stream().map(userMapper::mapTo).toList();
     }
 
     @GetMapping(path = "/users/{user_id}")
-    public ResponseEntity<UserDto> getUser(@PathVariable("user_id") Long userId){
+    public ResponseEntity<UserDto> getUser(@PathVariable("user_id") Long userId) {
         Optional<UserEntity> foundUser = userService.findById(userId);
         return foundUser.map(userEntity -> {
             UserDto userDto = userMapper.mapTo(userEntity);
@@ -46,12 +60,10 @@ public class UserController {
 
     @PutMapping(path = "/users/{user_id}")
     public ResponseEntity<UserDto> fullUpdateUser(
-            @PathVariable("user_id") Long userId,
-            @RequestBody UserDto userDto){
-        if (userService.isExists(userId)){
+            @PathVariable("user_id") Long userId, @RequestBody UserDto userDto) {
+        if (userService.isExists(userId)) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-
         userDto.setUserId(userId);
         UserEntity userEntity = userMapper.mapFrom(userDto);
         UserEntity savedUserEntity = userService.save(userEntity);
@@ -61,11 +73,10 @@ public class UserController {
     @PatchMapping(path = "/users/{user_id}")
     public ResponseEntity<UserDto> partialUpdateUser(
             @PathVariable("user_id") Long userId,
-            @RequestBody UserDto userDto){
-        if (userService.isExists(userId)){
+            @RequestBody UserDto userDto) {
+        if (userService.isExists(userId)) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-
         userDto.setUserId(userId);
         UserEntity userEntity = userMapper.mapFrom(userDto);
         UserEntity savedUserEntity = userService.partialUpdate(userId, userEntity);
