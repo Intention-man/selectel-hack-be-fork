@@ -1,7 +1,9 @@
 package com.webtut.dbwork.services.impl;
 
 import com.webtut.dbwork.config.MapperConfig;
+import com.webtut.dbwork.domain.dto.UserDto;
 import com.webtut.dbwork.domain.entities.UserEntity;
+import com.webtut.dbwork.mappers.Mapper;
 import com.webtut.dbwork.repositories.UserRepository;
 import com.webtut.dbwork.services.UserService;
 import org.springframework.stereotype.Service;
@@ -13,23 +15,30 @@ import java.util.stream.StreamSupport;
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-    private final MapperConfig mapperConfig;
+    private final Mapper<UserEntity, UserDto> userMapper;
 
-    public UserServiceImpl(UserRepository userRepository, MapperConfig mapperConfig) {
+    public UserServiceImpl(UserRepository userRepository, Mapper<UserEntity, UserDto> userMapper) {
         this.userRepository = userRepository;
-        this.mapperConfig = mapperConfig;
+        this.userMapper = userMapper;
     }
-
 
     @Override
     public UserEntity save(UserEntity userEntity) {
+        userEntity.setPassword(MapperConfig.encoder().encode(userEntity.getPassword()));
         return userRepository.save(userEntity);
     }
 
+    @Override
+    public UserDto save(UserDto userDto) {
+        UserEntity userEntity = userMapper.mapFrom(userDto);
+        userEntity.setPassword(MapperConfig.encoder().encode(userEntity.getPassword()));
+        return userMapper.mapTo(userRepository.save(userEntity));
+    }
 
     @Override
-    public Optional<UserEntity> findById(Long userId) {
-        return userRepository.findById(userId);
+    public Optional<UserDto> findById(Long userId) {
+        Optional<UserEntity> optionalUserDto = userRepository.findById(userId);
+        return optionalUserDto.map(userMapper::mapTo);
     }
 
     @Override
@@ -44,27 +53,28 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean isUserExists(UserEntity userEntity) {
+    public boolean isUserExists(UserDto userDto) {
+        UserEntity userEntity = userMapper.mapFrom(userDto);
         Optional<UserEntity> optionalUser = userRepository.existsByLogin(userEntity.getLogin());
-        if (optionalUser.isPresent()){
+        if (optionalUser.isPresent()) {
             UserEntity foundUser = optionalUser.get();
-            return mapperConfig.encoder().matches(userEntity.getPassword(), foundUser.getPassword());
+            return MapperConfig.encoder().matches(userEntity.getPassword(), foundUser.getPassword());
         }
         return false;
     }
 
     @Override
-    public List<UserEntity> findAll() {
-        return StreamSupport.stream(userRepository.findAll().spliterator(), false).toList();
+    public List<UserDto> findAll() {
+        return StreamSupport.stream(userRepository.findAll().spliterator(), false).map(userMapper::mapTo).toList();
     }
-    @Override
-    public UserEntity partialUpdate(Long userId, UserEntity userEntity) {
-        userEntity.setUserId(userId);
 
+    @Override
+    public UserDto partialUpdate(Long userId, UserDto userDto) {
+        userDto.setUserId(userId);
         return userRepository.findById(userId).map(existingUser -> {
-            Optional.ofNullable(userEntity.getLogin()).ifPresent(existingUser::setLogin);
-            Optional.ofNullable(userEntity.getPassword()).ifPresent(existingUser::setPassword);
-            return userRepository.save(existingUser);
+            Optional.ofNullable(userDto.getLogin()).ifPresent(existingUser::setLogin);
+            Optional.ofNullable(userDto.getPassword()).ifPresent(existingUser::setPassword);
+            return userMapper.mapTo(userRepository.save(existingUser));
         }).orElseThrow(() -> new RuntimeException("User doesn't exists"));
     }
 

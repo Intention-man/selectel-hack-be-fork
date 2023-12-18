@@ -2,6 +2,7 @@ package com.webtut.dbwork.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.webtut.dbwork.TestDataUtil;
+import com.webtut.dbwork.config.MapperConfig;
 import com.webtut.dbwork.domain.entities.UserEntity;
 import com.webtut.dbwork.services.UserService;
 import org.junit.jupiter.api.Test;
@@ -86,7 +87,7 @@ class UserControllerIntegrationTest {
         ).andExpect(
                 MockMvcResultMatchers.jsonPath("$[0].userId").isNumber()
         ).andExpect(
-                MockMvcResultMatchers.jsonPath("$[0].login").value("cool-fighter")
+                MockMvcResultMatchers.jsonPath("$[0].login").value(testUser.getLogin())
         ).andExpect(
                 MockMvcResultMatchers.jsonPath("$[0].password").isString()
         );
@@ -114,7 +115,7 @@ class UserControllerIntegrationTest {
         ).andExpect(
                 MockMvcResultMatchers.jsonPath("$.userId").isNumber()
         ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.login").value("cool-fighter")
+                MockMvcResultMatchers.jsonPath("$.login").value(testUser.getLogin())
         ).andExpect(
                 MockMvcResultMatchers.jsonPath("$.password").isString()
         );
@@ -142,6 +143,7 @@ class UserControllerIntegrationTest {
 
         UserEntity userEntity2 = TestDataUtil.createTestUsers().get(1);
         String userJson = objectMapper.writeValueAsString(userEntity2);
+        String hashedPassword = MapperConfig.encoder().encode(userEntity2.getPassword());
 
         mockMvc.perform(
                 MockMvcRequestBuilders.put("/users/" + savedUser.getUserId())
@@ -150,9 +152,9 @@ class UserControllerIntegrationTest {
         ).andExpect(
                 MockMvcResultMatchers.jsonPath("$.userId").value(savedUser.getUserId())
         ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.login").value("second-breath")
+                MockMvcResultMatchers.jsonPath("$.login").value(userEntity2.getLogin())
         ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.password").value("456")
+                MockMvcResultMatchers.jsonPath("$.password").isString()
         );
     }
 

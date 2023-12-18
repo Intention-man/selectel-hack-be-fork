@@ -82,9 +82,14 @@ class PointControllerIntegrationTest {
 
     @Test
     void testThatListPointsReturnsHttpStatus200() throws Exception {
+        UserEntity testUser = TestDataUtil.createTestUser();
+        PointEntity testPoint = TestDataUtil.createTestPointEntity(testUser);
+        pointService.save(testPoint);
+        String pointJson = objectMapper.writeValueAsString(testUser.getUserId());
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/points")
                         .contentType(MediaType.APPLICATION_JSON)
+                        .content(pointJson)
         ).andExpect(
                 MockMvcResultMatchers.status().isOk()
         );
@@ -95,9 +100,12 @@ class PointControllerIntegrationTest {
         UserEntity testUser = TestDataUtil.createTestUser();
         PointEntity testPoint = TestDataUtil.createTestPointEntity(testUser);
         pointService.save(testPoint);
+        String pointJson = objectMapper.writeValueAsString(testUser.getUserId());
+
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/points")
                         .contentType(MediaType.APPLICATION_JSON)
+                        .content(pointJson)
         ).andExpect(
                 MockMvcResultMatchers.jsonPath("$[0].pointId").isNumber()
         ).andExpect(
@@ -130,10 +138,12 @@ class PointControllerIntegrationTest {
         UserEntity testUser = TestDataUtil.createTestUser();
         PointEntity testPoint = TestDataUtil.createTestPointEntity(testUser);
         pointService.save(testPoint);
+        String pointJson = objectMapper.writeValueAsString(testUser.getUserId());
 
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/points/" + testPoint.getPointId())
                         .contentType(MediaType.APPLICATION_JSON)
+                        .content(pointJson)
         ).andExpect(
                 MockMvcResultMatchers.jsonPath("$.pointId").isNumber()
         ).andExpect(
