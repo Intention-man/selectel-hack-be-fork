@@ -1,7 +1,5 @@
 package com.webtut.dbwork;
 
-import com.webtut.dbwork.domain.dto.PointDto;
-import com.webtut.dbwork.domain.dto.UserDto;
 import com.webtut.dbwork.domain.entities.PointEntity;
 import com.webtut.dbwork.domain.entities.UserEntity;
 

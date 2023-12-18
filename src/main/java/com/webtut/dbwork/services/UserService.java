@@ -15,7 +15,8 @@ public interface UserService {
     Optional<UserEntity> findById(Long userId);
 
     boolean isExists(Long userId);
-    boolean isExists(UserEntity userEntity);
+    boolean isLoginOccupied(String login);
+    boolean isUserExists(UserEntity userEntity);
 
     UserEntity partialUpdate(Long userId, UserEntity userEntity);
 

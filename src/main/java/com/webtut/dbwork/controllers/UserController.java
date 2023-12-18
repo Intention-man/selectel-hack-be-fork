@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin
 public class UserController {
 
     private final UserService userService;
@@ -29,7 +29,7 @@ public class UserController {
     @PostMapping(path = "/auth")
     public ResponseEntity<Boolean> checkAuth(@RequestBody UserDto userDto) {
         UserEntity userEntity = userMapper.mapFrom(userDto);
-        if (userService.isExists(userEntity)) {
+        if (userService.isUserExists(userEntity)) {
             return new ResponseEntity<>(true, HttpStatus.OK);
         }
         return new ResponseEntity<>(false, HttpStatus.UNAUTHORIZED);
@@ -38,9 +38,13 @@ public class UserController {
     @PostMapping(path = "/users")
     public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto) {
         UserEntity userEntity = userMapper.mapFrom(userDto);
-        userEntity.setPassword(mapperConfig.encoder().encode(userEntity.getPassword()));
-        UserEntity savedUserEntity = userService.save(userEntity);
-        return new ResponseEntity<>(userMapper.mapTo(savedUserEntity), HttpStatus.CREATED);
+        if (userService.isLoginOccupied(userEntity.getLogin())) {
+            return new ResponseEntity<>(userDto, HttpStatus.CONFLICT);
+        } else {
+            userEntity.setPassword(mapperConfig.encoder().encode(userEntity.getPassword()));
+            UserEntity savedUserEntity = userService.save(userEntity);
+            return new ResponseEntity<>(userMapper.mapTo(savedUserEntity), HttpStatus.CREATED);
+        }
     }
 
     @GetMapping(path = "/users")
@@ -61,7 +65,7 @@ public class UserController {
     @PutMapping(path = "/users/{user_id}")
     public ResponseEntity<UserDto> fullUpdateUser(
             @PathVariable("user_id") Long userId, @RequestBody UserDto userDto) {
-        if (userService.isExists(userId)) {
+        if (!userService.isExists(userId)) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         userDto.setUserId(userId);
@@ -74,7 +78,7 @@ public class UserController {
     public ResponseEntity<UserDto> partialUpdateUser(
             @PathVariable("user_id") Long userId,
             @RequestBody UserDto userDto) {
-        if (userService.isExists(userId)) {
+        if (!userService.isExists(userId)) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         userDto.setUserId(userId);

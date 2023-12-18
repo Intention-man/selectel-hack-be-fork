@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
 
@@ -25,12 +26,12 @@ public class PointServiceImpl implements PointService {
     }
 
     @Override
-    public List<PointEntity> findAll() {
-        return StreamSupport.stream(pointRepository.findAll().spliterator(), false).toList();
+    public List<PointEntity> findAllUserPoints(Long userId) {
+        return StreamSupport.stream(pointRepository.findAll().spliterator(), false).filter(pointEntity -> Objects.equals(pointEntity.getUserEntity().getUserId(), userId)).toList();
     }
 
     @Override
-    public Page<PointEntity> findAll(Pageable pageable) {
+    public Page<PointEntity> findAllPoints(Long userId, Pageable pageable) {
         return pointRepository.findAll(pageable);
     }
 

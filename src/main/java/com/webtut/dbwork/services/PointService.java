@@ -13,9 +13,9 @@ import java.util.Optional;
 public interface PointService {
     PointEntity save(PointEntity pointEntity);
 
-    List<PointEntity> findAll();
+    List<PointEntity> findAllUserPoints(Long userId);
 
-    Page<PointEntity> findAll(Pageable pageable);
+    Page<PointEntity> findAllPoints(Long userId, Pageable pageable);
 
     Optional<PointEntity> findById(Long pointId);
 

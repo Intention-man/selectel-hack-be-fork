@@ -153,9 +153,9 @@ class PointControllerIntegrationTest {
         PointEntity testPoint = TestDataUtil.createTestPointEntity(testUser);
         PointEntity savedPointEntity = pointService.save(testPoint);
 
-        PointDto testPointA = pointMapper.mapTo(TestDataUtil.createTestPoints(testUser).get(2));
-        testPointA.setPointId(savedPointEntity.getPointId());
-        String pointJson = objectMapper.writeValueAsString(testPointA);
+        PointDto newPointData = pointMapper.mapTo(TestDataUtil.createTestPoints(testUser).get(2));
+        newPointData.setPointId(savedPointEntity.getPointId());
+        String pointJson = objectMapper.writeValueAsString(newPointData);
 
         mockMvc.perform(
                 MockMvcRequestBuilders.put("/points/" + savedPointEntity.getPointId())
@@ -164,13 +164,13 @@ class PointControllerIntegrationTest {
         ).andExpect(
                 MockMvcResultMatchers.jsonPath("$.pointId").isNumber()
         ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.x").value(testPointA.getX())
+                MockMvcResultMatchers.jsonPath("$.x").value(newPointData.getX())
         ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.y").value(testPointA.getY())
+                MockMvcResultMatchers.jsonPath("$.y").value(newPointData.getY())
         ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.r").value(testPointA.getR())
+                MockMvcResultMatchers.jsonPath("$.r").value(newPointData.getR())
         ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.inside").value(testPoint.isInside())
+                MockMvcResultMatchers.jsonPath("$.inside").value(newPointData.isInside())
         );
     }
 

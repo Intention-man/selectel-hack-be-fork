@@ -121,7 +121,7 @@ class UserControllerIntegrationTest {
     }
 
     @Test
-    void testThatFullUpdateUserReturnsHttpStatus404WhenNoUserExists() throws Exception {
+    void testThatFullUpdateUserReturnsHttpStatus200WhenUserExists() throws Exception {
         UserEntity testUser = TestDataUtil.createTestUser();
         UserEntity savedUser = userService.save(testUser);
         String userJson = objectMapper.writeValueAsString(testUser);

@@ -34,11 +34,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean isExists(Long userId) {
-        return !userRepository.existsById(userId);
+        return userRepository.existsById(userId);
     }
 
     @Override
-    public boolean isExists(UserEntity userEntity) {
+    public boolean isLoginOccupied(String login) {
+        Optional<UserEntity> optionalUser = userRepository.existsByLogin(login);
+        return optionalUser.isPresent();
+    }
+
+    @Override
+    public boolean isUserExists(UserEntity userEntity) {
         Optional<UserEntity> optionalUser = userRepository.existsByLogin(userEntity.getLogin());
         if (optionalUser.isPresent()){
             UserEntity foundUser = optionalUser.get();

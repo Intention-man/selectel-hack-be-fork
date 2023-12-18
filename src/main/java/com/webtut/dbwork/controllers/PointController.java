@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin
 public class PointController {
 
     private final PointService pointService;
@@ -32,8 +32,8 @@ public class PointController {
     }
 
     @GetMapping(path = "/points")
-    public List<PointDto> listPoints() {
-        List<PointEntity> points = pointService.findAll();
+    public List<PointDto> listUsersPoints(@RequestBody Long userId) {
+        List<PointEntity> points = pointService.findAllUserPoints(userId);
         return points.stream().map(pointMapper::mapTo).toList();
     }
 
@@ -50,7 +50,6 @@ public class PointController {
     public ResponseEntity<PointDto> save(
             @PathVariable("point_id") Long pointId,
             @RequestBody PointDto pointDto) {
-
         PointEntity pointEntity = pointMapper.mapFrom(pointDto);
         boolean pointExist = pointService.isExists(pointId);
         pointEntity.setPointId(pointId);
@@ -67,8 +66,7 @@ public class PointController {
     public ResponseEntity<PointDto> partialUpdatePoint(
             @PathVariable("point_id") Long pointId,
             @RequestBody PointDto pointDto) {
-
-        if (pointService.isExists(pointId)) {
+        if (!pointService.isExists(pointId)) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 

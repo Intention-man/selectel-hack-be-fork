@@ -16,5 +16,5 @@ public class PointDto {
     private double y;
     private double r;
     private boolean inside;
-//    private UserDto userDto;
+    private UserDto userDto;
 }
