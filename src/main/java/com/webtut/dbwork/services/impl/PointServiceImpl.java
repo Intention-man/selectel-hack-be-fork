@@ -1,6 +1,8 @@
 package com.webtut.dbwork.services.impl;
 
+import com.webtut.dbwork.domain.dto.PointDto;
 import com.webtut.dbwork.domain.entities.PointEntity;
+import com.webtut.dbwork.mappers.Mapper;
 import com.webtut.dbwork.repositories.PointRepository;
 import com.webtut.dbwork.services.PointService;
 import org.springframework.data.domain.Page;
@@ -15,29 +17,39 @@ import java.util.stream.StreamSupport;
 @Service
 public class PointServiceImpl implements PointService {
     private final PointRepository pointRepository;
+    private final Mapper<PointEntity, PointDto> pointMapper;
 
-    public PointServiceImpl(PointRepository pointRepository) {
+    public PointServiceImpl(PointRepository pointRepository, Mapper<PointEntity, PointDto> pointMapper) {
         this.pointRepository = pointRepository;
+        this.pointMapper = pointMapper;
     }
 
     @Override
     public PointEntity save(PointEntity pointEntity) {
         return pointRepository.save(pointEntity);
     }
-
     @Override
-    public List<PointEntity> findAllUserPoints(Long userId) {
-        return StreamSupport.stream(pointRepository.findAll().spliterator(), false).filter(pointEntity -> Objects.equals(pointEntity.getUserEntity().getUserId(), userId)).toList();
+    public PointDto save(PointDto pointDto) {
+        PointEntity pointEntity = pointMapper.mapFrom(pointDto);
+        return pointMapper.mapTo(pointRepository.save(pointEntity));
     }
 
     @Override
-    public Page<PointEntity> findAllPoints(Long userId, Pageable pageable) {
+    public List<PointDto> findAllUserPoints(Long userId) {
+        return StreamSupport.stream(pointRepository.findAll().spliterator(), false)
+                .filter(pointEntity -> Objects.equals(pointEntity.getUserEntity().getUserId(), userId))
+                .map(pointMapper::mapTo).toList();
+    }
+
+    @Override
+    public Page<PointEntity> findAllPointsOfPage(Long userId, Pageable pageable) {
         return pointRepository.findAll(pageable);
     }
 
     @Override
-    public Optional<PointEntity> findById(Long pointId) {
-        return pointRepository.findById(pointId);
+    public Optional<PointDto> findById(Long pointId) {
+        Optional<PointEntity> optionalPointDto = pointRepository.findById(pointId);
+        return optionalPointDto.map(pointMapper::mapTo);
     }
 
     @Override
@@ -46,14 +58,14 @@ public class PointServiceImpl implements PointService {
     }
 
     @Override
-    public PointEntity partialUpdate(Long pointId, PointEntity pointEntity) {
-        pointEntity.setPointId(pointId);
+    public PointDto partialUpdate(Long pointId, PointDto pointDto) {
+        pointDto.setPointId(pointId);
         return pointRepository.findById(pointId).map(existingPoint -> {
-            Optional.of(pointEntity.getX()).ifPresent(existingPoint::setX);
-            Optional.of(pointEntity.getY()).ifPresent(existingPoint::setY);
-            Optional.of(pointEntity.getR()).ifPresent(existingPoint::setR);
-            Optional.of(pointEntity.isInside()).ifPresent(existingPoint::setInside);
-            return pointRepository.save(existingPoint);
+            Optional.of(pointDto.getX()).ifPresent(existingPoint::setX);
+            Optional.of(pointDto.getY()).ifPresent(existingPoint::setY);
+            Optional.of(pointDto.getR()).ifPresent(existingPoint::setR);
+            Optional.of(pointDto.isInside()).ifPresent(existingPoint::setInside);
+            return pointMapper.mapTo(pointRepository.save(existingPoint));
         }).orElseThrow(() -> new RuntimeException("Point doesn't exists"));
     }
 

@@ -1,10 +1,10 @@
 package com.webtut.dbwork.services;
 
+import com.webtut.dbwork.domain.dto.PointDto;
 import com.webtut.dbwork.domain.entities.PointEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
 
 import java.util.List;
 import java.util.Optional;
@@ -12,16 +12,17 @@ import java.util.Optional;
 @Service
 public interface PointService {
     PointEntity save(PointEntity pointEntity);
+    PointDto save(PointDto pointDto);
 
-    List<PointEntity> findAllUserPoints(Long userId);
+    List<PointDto> findAllUserPoints(Long userId);
 
-    Page<PointEntity> findAllPoints(Long userId, Pageable pageable);
+    Page<PointEntity> findAllPointsOfPage(Long userId, Pageable pageable);
 
-    Optional<PointEntity> findById(Long pointId);
+    Optional<PointDto> findById(Long pointId);
 
     boolean isExists(Long pointId);
 
-    PointEntity partialUpdate(Long pointId, PointEntity pointEntity);
+    PointDto partialUpdate(Long pointId, PointDto pointDto);
 
     void delete(Long pointId);
 }
