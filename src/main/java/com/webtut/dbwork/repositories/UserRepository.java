@@ -11,5 +11,6 @@ import java.util.Optional;
 public interface UserRepository extends CrudRepository<UserEntity, Long> {
 
     @Query("SELECT user from UserEntity user where user.login = ?1")
-    Optional<UserEntity> existsByLogin(String reqLogin);
+    Optional<UserEntity> findByLogin(String reqLogin);
+
 }

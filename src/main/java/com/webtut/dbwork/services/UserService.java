@@ -16,6 +16,7 @@ public interface UserService {
     List<UserDto> findAll();
 
     Optional<UserDto> findById(Long userId);
+    Optional<UserDto> findByLogin(String login);
 
     boolean isExists(Long userId);
     boolean isLoginOccupied(String login);

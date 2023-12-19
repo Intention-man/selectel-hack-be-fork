@@ -12,19 +12,10 @@ import java.util.Optional;
 @RestController
 @CrossOrigin
 public class UserController {
-
     private final UserService userService;
 
     public UserController(UserService userService) {
         this.userService = userService;
-    }
-
-    @PostMapping(path = "/auth")
-    public ResponseEntity<Boolean> checkAuth(@RequestBody UserDto userDto) {
-        if (userService.isUserExists(userDto)) {
-            return new ResponseEntity<>(true, HttpStatus.OK);
-        }
-        return new ResponseEntity<>(false, HttpStatus.UNAUTHORIZED);
     }
 
     @PostMapping(path = "/users")

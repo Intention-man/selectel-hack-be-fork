@@ -20,4 +20,10 @@ public class MapperConfig {
     public static PasswordEncoder encoder() {
         return new BCryptPasswordEncoder();
     }
+
+
+//    public static void print(String message){
+//        Logger logger = Logger.getAnonymousLogger();
+//        logger.info(message);
+//    }
 }

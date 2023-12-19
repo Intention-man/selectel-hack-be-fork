@@ -42,20 +42,26 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Optional<UserDto> findByLogin(String login) {
+        Optional<UserEntity> optionalUser = userRepository.findByLogin(login);
+        return optionalUser.map(userMapper::mapTo);
+    }
+
+    @Override
     public boolean isExists(Long userId) {
         return userRepository.existsById(userId);
     }
 
     @Override
     public boolean isLoginOccupied(String login) {
-        Optional<UserEntity> optionalUser = userRepository.existsByLogin(login);
+        Optional<UserEntity> optionalUser = userRepository.findByLogin(login);
         return optionalUser.isPresent();
     }
 
     @Override
     public boolean isUserExists(UserDto userDto) {
         UserEntity userEntity = userMapper.mapFrom(userDto);
-        Optional<UserEntity> optionalUser = userRepository.existsByLogin(userEntity.getLogin());
+        Optional<UserEntity> optionalUser = userRepository.findByLogin(userEntity.getLogin());
         if (optionalUser.isPresent()) {
             UserEntity foundUser = optionalUser.get();
             return MapperConfig.encoder().matches(userEntity.getPassword(), foundUser.getPassword());
