@@ -18,15 +18,6 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping(path = "/users")
-    public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto) {
-        if (userService.isLoginOccupied(userDto.getLogin())) {
-            return new ResponseEntity<>(userDto, HttpStatus.CONFLICT);
-        } else {
-            UserDto savedUserDto = userService.save(userDto);
-            return new ResponseEntity<>(savedUserDto, HttpStatus.CREATED);
-        }
-    }
 
     @GetMapping(path = "/users")
     public List<UserDto> listUsers() {

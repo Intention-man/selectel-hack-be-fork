@@ -1,6 +1,7 @@
 package com.webtut.dbwork.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.webtut.dbwork.services.impl.AuthService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -56,6 +57,6 @@ public class JwtFilter extends OncePerRequestFilter {
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getServletPath();
         System.out.println(path);
-        return path.matches("/login");
+        return path.matches("/login") || path.matches("/registration");
     }
 }
