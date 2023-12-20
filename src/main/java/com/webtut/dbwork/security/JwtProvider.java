@@ -2,7 +2,6 @@ package com.webtut.dbwork.security;
 
 import com.webtut.dbwork.domain.dto.UserDto;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -15,13 +14,15 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 
+import static io.jsonwebtoken.io.Decoders.BASE64;
+
 @Slf4j
 @Component
 public class JwtProvider {
     private final SecretKey jwtAccessSecret;
 
     public JwtProvider(@Value("${jwt.secret.access}") String jwtAccessSecret) {
-        this.jwtAccessSecret = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtAccessSecret));
+        this.jwtAccessSecret = Keys.hmacShaKeyFor(BASE64.decode(jwtAccessSecret));
     }
 
     public String generateAccessToken(@NonNull UserDto userDto) {

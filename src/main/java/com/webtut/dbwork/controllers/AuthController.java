@@ -18,20 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin
 public class AuthController {
     private final AuthService authService;
-    private final UserService userService;
 
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> login(@RequestBody UserDto userDto) {
         return authService.authAndCreateToken(userDto);
     }
 
-    @PostMapping(path = "/registration")
-    public ResponseEntity<HttpStatus> createUser(@RequestBody UserDto userDto) {
-        if (userService.isLoginOccupied(userDto.getLogin())) {
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
-        } else {
-            userService.save(userDto);
-            return new ResponseEntity<>(HttpStatus.CREATED);
-        }
-    }
 }
