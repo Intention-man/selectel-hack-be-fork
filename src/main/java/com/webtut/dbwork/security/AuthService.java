@@ -1,5 +1,6 @@
 package com.webtut.dbwork.security;
 
+import com.webtut.dbwork.config.MapperConfig;
 import com.webtut.dbwork.domain.dto.UserDto;
 import com.webtut.dbwork.services.UserService;
 import lombok.NonNull;
@@ -24,10 +25,10 @@ public class AuthService {
         if (optionalUser.isEmpty())
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         UserDto foundUser = optionalUser.get();
-        if (foundUser.getPassword().equals(userDto.getPassword())) {
+        if (MapperConfig.encoder().matches(userDto.getPassword(), foundUser.getPassword())) {
             final String accessToken = jwtProvider.generateAccessToken(foundUser);
             tokenStorage.put(accessToken, foundUser.getLogin());
-            return new ResponseEntity<>(new JwtResponse( accessToken), HttpStatus.OK);
+            return new ResponseEntity<>(new JwtResponse(accessToken), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
