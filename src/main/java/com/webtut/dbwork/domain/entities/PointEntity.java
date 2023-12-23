@@ -22,7 +22,7 @@ public class PointEntity {
     private double r;
     private boolean inside;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id")
-    private UserEntity userEntity;
+//    @ManyToOne(cascade = CascadeType.ALL)
+//    @JoinColumn(name = "user_id")
+    private Long userId;
 }

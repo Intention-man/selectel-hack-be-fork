@@ -2,6 +2,9 @@ package com.webtut.dbwork.controllers;
 
 import com.webtut.dbwork.domain.dto.PointDto;
 import com.webtut.dbwork.services.PointService;
+import com.webtut.dbwork.services.UserService;
+import com.webtut.dbwork.services.impl.AuthService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,22 +14,32 @@ import java.util.Optional;
 
 @RestController
 @CrossOrigin
+@RequiredArgsConstructor
 public class PointController {
     private final PointService pointService;
-
-    public PointController(PointService pointService) {
-        this.pointService = pointService;
-    }
+    private final UserService userService;
+    private final AuthService authService;
 
     @PostMapping(path = "/points")
-    public ResponseEntity<PointDto> createPoint(@RequestBody PointDto pointDto) {
+    public ResponseEntity<PointDto> createPoint(
+            @RequestHeader("Authorization") String token,
+            @RequestBody PointDto pointDto) {
+        Long userId = authService.userIdFromToken(token);
+        if (userId == -1){
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+        pointDto.setUserId(userId);
         PointDto savedPointDto = pointService.save(pointDto);
         return new ResponseEntity<>(savedPointDto, HttpStatus.CREATED);
     }
 
     @GetMapping(path = "/points")
-    public List<PointDto> listUsersPoints(@RequestBody Long userId) {
-        return pointService.findAllUserPoints(userId);
+    public ResponseEntity<List<PointDto>> listUsersPoints(@RequestHeader("Authorization") String token){
+        Long userId = authService.userIdFromToken(token);
+        if (userId == -1){
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+        return new ResponseEntity<>(pointService.findAllUserPoints(userId), HttpStatus.OK);
     }
 
     @GetMapping(path = "/points/{point_id}")

@@ -37,7 +37,7 @@ public class PointServiceImpl implements PointService {
     @Override
     public List<PointDto> findAllUserPoints(Long userId) {
         return StreamSupport.stream(pointRepository.findAll().spliterator(), false)
-                .filter(pointEntity -> Objects.equals(pointEntity.getUserEntity().getUserId(), userId))
+                .filter(pointEntity -> Objects.equals(pointEntity.getUserId(), userId))
                 .map(pointMapper::mapTo).toList();
     }
 
@@ -73,5 +73,4 @@ public class PointServiceImpl implements PointService {
     public void delete(Long pointId) {
         pointRepository.deleteById(pointId);
     }
-
 }
