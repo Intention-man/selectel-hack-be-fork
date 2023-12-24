@@ -29,7 +29,8 @@ public class AuthController {
     public ResponseEntity<HttpStatusCode> registration(@RequestBody UserDto userDto) {
         if (userService.isUserExists(userDto))
             return new ResponseEntity<>(HttpStatus.CONFLICT);
-
+        if (userDto.getLogin().length() < 6 || userDto.getPassword().length() < 6)
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         userService.save(userDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }

@@ -11,16 +11,14 @@ public final class TestDataUtil {
     }
 
     public static UserEntity createTestUser() {
-        return buildUser(1L, "cool-fighter", "123");
+        return buildUser(1L, "correct-user", "123456");
     }
 
     public static List<UserEntity> createTestUsers() {
         List<UserEntity> userEntities = new ArrayList<>();
-
         userEntities.add(buildUser(1L, "cool-fighter", "123"));
         userEntities.add(buildUser(2L, "second-breath", "456"));
         userEntities.add(buildUser(3L, "third-chance", "789"));
-
         return userEntities;
     }
 
@@ -39,11 +37,9 @@ public final class TestDataUtil {
 
     public static List<PointEntity> createTestPoints(final UserEntity userEntity) {
         List<PointEntity> pointEntities = new ArrayList<>();
-
         pointEntities.add(buildPointEntity(1L, 1d, 2.5d, 2d, userEntity));
         pointEntities.add(buildPointEntity(2L, 0d, 0d, 1d, userEntity));
         pointEntities.add(buildPointEntity(3L, -4d, 4.9d, 1.5d, userEntity));
-
         return pointEntities;
     }
 
@@ -54,7 +50,7 @@ public final class TestDataUtil {
                 .y(y)
                 .r(r)
                 .inside(isInside(x, y, r))
-                .userEntity(userEntity)
+                .userId(userEntity.getUserId())
                 .build();
     }
 
