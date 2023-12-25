@@ -88,4 +88,8 @@ public class UserServiceImpl implements UserService {
     public void delete(Long userId) {
         userRepository.deleteById(userId);
     }
+
+    public boolean isLoginAndPasswordValid(UserDto userDto){
+        return userDto.getLogin().length() >= 6 && userDto.getPassword().length() >= 6;
+    }
 }

@@ -25,4 +25,6 @@ public interface UserService {
     UserDto partialUpdate(Long userId, UserDto userDto);
 
     void delete(Long userId);
+
+    boolean isLoginAndPasswordValid(UserDto userDto);
 }

@@ -24,7 +24,9 @@ public class UserController {
     }
 
     @GetMapping(path = "/users/{user_id}")
-    public ResponseEntity<UserDto> getUser(@PathVariable("user_id") Long userId) {
+    public ResponseEntity<UserDto> getUser(
+            @PathVariable("user_id") Long userId
+    ){
         Optional<UserDto> foundUser = userService.findById(userId);
         return foundUser.map(userDto -> new ResponseEntity<>(userDto, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
@@ -32,10 +34,12 @@ public class UserController {
 
     @PutMapping(path = "/users/{user_id}")
     public ResponseEntity<UserDto> fullUpdateUser(
-            @PathVariable("user_id") Long userId, @RequestBody UserDto userDto) {
-        if (!userService.isExists(userId)) {
+            @PathVariable("user_id") Long userId,
+            @RequestBody UserDto userDto
+    ){
+        if (!userService.isExists(userId))
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+
         userDto.setUserId(userId);
         UserDto savedUserDto = userService.save(userDto);
         return new ResponseEntity<>(savedUserDto, HttpStatus.OK);
@@ -44,17 +48,20 @@ public class UserController {
     @PatchMapping(path = "/users/{user_id}")
     public ResponseEntity<UserDto> partialUpdateUser(
             @PathVariable("user_id") Long userId,
-            @RequestBody UserDto userDto) {
-        if (!userService.isExists(userId)) {
+            @RequestBody UserDto userDto
+    ){
+        if (!userService.isExists(userId))
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+
         userDto.setUserId(userId);
         UserDto savedUserDto = userService.partialUpdate(userId, userDto);
         return new ResponseEntity<>(savedUserDto, HttpStatus.OK);
     }
 
     @DeleteMapping(path = "/users/{user_id}")
-    public ResponseEntity<HttpStatus> deleteUser(@PathVariable("user_id") Long userId) {
+    public ResponseEntity<HttpStatus> deleteUser(
+            @PathVariable("user_id") Long userId
+    ){
         userService.delete(userId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

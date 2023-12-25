@@ -3,9 +3,14 @@ package com.webtut.dbwork.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.webtut.dbwork.TestDataUtil;
 import com.webtut.dbwork.config.MapperConfig;
+import com.webtut.dbwork.domain.dto.UserDto;
 import com.webtut.dbwork.domain.entities.UserEntity;
+import com.webtut.dbwork.mappers.Mapper;
 import com.webtut.dbwork.services.UserService;
+import com.webtut.dbwork.services.impl.AuthService;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -21,50 +26,30 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 @ExtendWith(SpringExtension.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @AutoConfigureMockMvc
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class UserControllerIntegrationTest {
+    private String token;
     private final UserService userService;
+    private final AuthService authService;
     private final MockMvc mockMvc;
     private final ObjectMapper objectMapper;
+    private final Mapper<UserEntity, UserDto> userMapper;
+
 
     @Autowired
-    public UserControllerIntegrationTest(UserService userService, MockMvc mockMvc, ObjectMapper objectMapper) {
+    public UserControllerIntegrationTest(UserService userService, AuthService authService, MockMvc mockMvc, ObjectMapper objectMapper, Mapper<UserEntity, UserDto> userMapper) {
         this.mockMvc = mockMvc;
         this.objectMapper = objectMapper;
         this.userService = userService;
+        this.authService = authService;
+        this.userMapper = userMapper;
     }
 
-    @Test
-    void testThatCreateUserSuccessfullyReturnsHttp201Created() throws Exception {
+    @BeforeAll
+    void setUp() {
         UserEntity testUser = TestDataUtil.createTestUser();
-        testUser.setUserId(null);
-        String userJson = objectMapper.writeValueAsString(testUser);
-
-        mockMvc.perform(
-                MockMvcRequestBuilders.post("/users")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(userJson)
-        ).andExpect(
-                MockMvcResultMatchers.status().isCreated()
-        );
-    }
-
-    @Test
-    void testThatCreateUserSuccessfullyReturnsSavedUser() throws Exception {
-        UserEntity testUser = TestDataUtil.createTestUser();
-        testUser.setUserId(null);
-        String userJson = objectMapper.writeValueAsString(testUser);
-
-        mockMvc.perform(
-                MockMvcRequestBuilders.post("/users")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(userJson)
-        ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.userId").isNumber()
-        ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.login").value(testUser.getLogin())
-        ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.password").isString()
-        );
+        userService.save(testUser);
+        token = "Bearer " + authService.addToken(userMapper.mapTo(testUser));
     }
 
     @Test
@@ -72,6 +57,7 @@ class UserControllerIntegrationTest {
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/users")
                         .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", token)
         ).andExpect(
                 MockMvcResultMatchers.status().isOk()
         );
@@ -84,6 +70,7 @@ class UserControllerIntegrationTest {
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/users")
                         .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", token)
         ).andExpect(
                 MockMvcResultMatchers.jsonPath("$[0].userId").isNumber()
         ).andExpect(
@@ -100,6 +87,7 @@ class UserControllerIntegrationTest {
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/users/" + testUser.getUserId())
                         .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", token)
         ).andExpect(
                 MockMvcResultMatchers.status().isOk()
         );
@@ -112,6 +100,7 @@ class UserControllerIntegrationTest {
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/users/" + testUser.getUserId())
                         .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", token)
         ).andExpect(
                 MockMvcResultMatchers.jsonPath("$.userId").isNumber()
         ).andExpect(
@@ -126,10 +115,10 @@ class UserControllerIntegrationTest {
         UserEntity testUser = TestDataUtil.createTestUser();
         UserEntity savedUser = userService.save(testUser);
         String userJson = objectMapper.writeValueAsString(testUser);
-
         mockMvc.perform(
                 MockMvcRequestBuilders.put("/users/" + savedUser.getUserId())
                         .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", token)
                         .content(userJson)
         ).andExpect(
                 MockMvcResultMatchers.status().isOk()
@@ -139,22 +128,23 @@ class UserControllerIntegrationTest {
     @Test
     void testThatFullUpdateUpdatesExistingUser() throws Exception {
         UserEntity testUser = TestDataUtil.createTestUser();
-        UserEntity savedUser = userService.save(testUser);
+        userService.save(testUser);
 
         UserEntity userEntity2 = TestDataUtil.createTestUsers().get(1);
+        String hashedPassword = MapperConfig.encoder().encode(testUser.getPassword());
         String userJson = objectMapper.writeValueAsString(userEntity2);
-        String hashedPassword = MapperConfig.encoder().encode(userEntity2.getPassword());
 
         mockMvc.perform(
-                MockMvcRequestBuilders.put("/users/" + savedUser.getUserId())
+                MockMvcRequestBuilders.put("/users/" + testUser.getUserId())
                         .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", token)
                         .content(userJson)
         ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.userId").value(savedUser.getUserId())
+                MockMvcResultMatchers.jsonPath("$.userId").value(testUser.getUserId())
         ).andExpect(
                 MockMvcResultMatchers.jsonPath("$.login").value(userEntity2.getLogin())
         ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.password").isString()
+                MockMvcResultMatchers.jsonPath("$.password").value(hashedPassword)
         );
     }
 
@@ -166,7 +156,7 @@ class UserControllerIntegrationTest {
         mockMvc.perform(
                 MockMvcRequestBuilders.delete("/users/" + savedUser.getUserId())
                         .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", token)
         ).andExpect(MockMvcResultMatchers.status().isNoContent());
     }
-
 }

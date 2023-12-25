@@ -20,16 +20,22 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
     private final AuthService authService;
     private final UserService userService;
+
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> login(@RequestBody UserDto userDto) {
-        return authService.authAndCreateToken(userDto);
+        HttpStatus authStatus = authService.tryAuth(userDto);
+        if (authStatus == HttpStatus.OK) {
+            String token = authService.addToken(userDto);
+            return new ResponseEntity<>(new JwtResponse(token), authStatus);
+        }
+        return new ResponseEntity<>(authStatus);
     }
 
     @PostMapping("/registration")
     public ResponseEntity<HttpStatusCode> registration(@RequestBody UserDto userDto) {
         if (userService.isUserExists(userDto))
             return new ResponseEntity<>(HttpStatus.CONFLICT);
-        if (userDto.getLogin().length() < 6 || userDto.getPassword().length() < 6)
+        if (!userService.isLoginAndPasswordValid(userDto))
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         userService.save(userDto);
         return new ResponseEntity<>(HttpStatus.CREATED);

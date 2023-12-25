@@ -22,28 +22,25 @@ public class PointController {
 
     @PostMapping(path = "/points")
     public ResponseEntity<PointDto> createPoint(
-            @RequestHeader("Authorization") String token,
-            @RequestBody PointDto pointDto) {
-        Long userId = authService.userIdFromToken(token);
-        if (userId == -1){
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
+            @RequestAttribute Long userId,
+            @RequestBody PointDto pointDto)
+    {
         pointDto.setUserId(userId);
         PointDto savedPointDto = pointService.save(pointDto);
         return new ResponseEntity<>(savedPointDto, HttpStatus.CREATED);
     }
 
     @GetMapping(path = "/points")
-    public ResponseEntity<List<PointDto>> listUsersPoints(@RequestHeader("Authorization") String token){
-        Long userId = authService.userIdFromToken(token);
-        if (userId == -1){
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
+    public ResponseEntity<List<PointDto>> listUsersPoints(
+            @RequestAttribute Long userId)
+    {
         return new ResponseEntity<>(pointService.findAllUserPoints(userId), HttpStatus.OK);
     }
 
     @GetMapping(path = "/points/{point_id}")
-    public ResponseEntity<PointDto> getPoint(@PathVariable("point_id") Long pointId) {
+    public ResponseEntity<PointDto> getPoint(
+            @PathVariable("point_id") Long pointId
+    ){
         Optional<PointDto> foundPoint = pointService.findById(pointId);
         return foundPoint.map(pointDto -> new ResponseEntity<>(pointDto, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
@@ -52,20 +49,23 @@ public class PointController {
     @PutMapping(path = "/points/{point_id}")
     public ResponseEntity<PointDto> save(
             @PathVariable("point_id") Long pointId,
-            @RequestBody PointDto pointDto) {
+            @RequestBody PointDto pointDto
+    ){
         pointDto.setPointId(pointId);
         PointDto savedUpdatedPoint = pointService.save(pointDto);
-        if (pointService.isExists(pointId)) {
+        if (pointService.isExists(pointId))
             return new ResponseEntity<>(savedUpdatedPoint, HttpStatus.OK);
-        }
+
         return new ResponseEntity<>(savedUpdatedPoint, HttpStatus.CREATED);
     }
 
     @PatchMapping(path = "/points/{point_id}")
     public ResponseEntity<PointDto> partialUpdatePoint(
             @PathVariable("point_id") Long pointId,
-            @RequestBody PointDto pointDto) {
-        if (!pointService.isExists(pointId)) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            @RequestBody PointDto pointDto
+    ){
+        if (!pointService.isExists(pointId))
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
         pointDto.setPointId(pointId);
         PointDto savedPointDto = pointService.partialUpdate(pointId, pointDto);
@@ -73,7 +73,9 @@ public class PointController {
     }
 
     @DeleteMapping(path = "/points/{point_id}")
-    public ResponseEntity<HttpStatus> deleteBook(@PathVariable("point_id") Long pointId) {
+    public ResponseEntity<HttpStatus> deleteBook(
+            @PathVariable("point_id") Long pointId
+    ){
         pointService.delete(pointId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
