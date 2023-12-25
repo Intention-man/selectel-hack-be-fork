@@ -11,14 +11,18 @@ public final class TestDataUtil {
     }
 
     public static UserEntity createTestUser() {
-        return buildUser(1L, "correct-user", "123456");
+        return buildUser(1L, "correct-user", "123123");
+    }
+
+    public static UserEntity createTooShortUser() {
+        return buildUser(10L, "short", "pass");
     }
 
     public static List<UserEntity> createTestUsers() {
         List<UserEntity> userEntities = new ArrayList<>();
-        userEntities.add(buildUser(1L, "cool-fighter", "123"));
-        userEntities.add(buildUser(2L, "second-breath", "456"));
-        userEntities.add(buildUser(3L, "third-chance", "789"));
+        userEntities.add(buildUser(1L, "cool-fighter", "123123"));
+        userEntities.add(buildUser(2L, "second-breath", "456456"));
+        userEntities.add(buildUser(3L, "third-chance", "789789"));
         return userEntities;
     }
 

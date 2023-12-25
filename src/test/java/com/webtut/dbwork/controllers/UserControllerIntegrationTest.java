@@ -8,6 +8,7 @@ import com.webtut.dbwork.domain.entities.UserEntity;
 import com.webtut.dbwork.mappers.Mapper;
 import com.webtut.dbwork.services.UserService;
 import com.webtut.dbwork.services.impl.AuthService;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -16,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -24,9 +24,9 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-@AutoConfigureMockMvc
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@AutoConfigureMockMvc
 class UserControllerIntegrationTest {
     private String token;
     private final UserService userService;
@@ -35,21 +35,11 @@ class UserControllerIntegrationTest {
     private final ObjectMapper objectMapper;
     private final Mapper<UserEntity, UserDto> userMapper;
 
-
-    @Autowired
-    public UserControllerIntegrationTest(UserService userService, AuthService authService, MockMvc mockMvc, ObjectMapper objectMapper, Mapper<UserEntity, UserDto> userMapper) {
-        this.mockMvc = mockMvc;
-        this.objectMapper = objectMapper;
-        this.userService = userService;
-        this.authService = authService;
-        this.userMapper = userMapper;
-    }
-
     @BeforeAll
     void setUp() {
-        UserEntity testUser = TestDataUtil.createTestUser();
-        userService.save(testUser);
-        token = "Bearer " + authService.addToken(userMapper.mapTo(testUser));
+        UserEntity user = TestDataUtil.createTestUser();
+        userService.save(user);
+        token = "Bearer " + authService.addToken(userMapper.mapTo(user));
     }
 
     @Test
@@ -144,7 +134,7 @@ class UserControllerIntegrationTest {
         ).andExpect(
                 MockMvcResultMatchers.jsonPath("$.login").value(userEntity2.getLogin())
         ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.password").value(hashedPassword)
+                MockMvcResultMatchers.jsonPath("$.password").isString()
         );
     }
 

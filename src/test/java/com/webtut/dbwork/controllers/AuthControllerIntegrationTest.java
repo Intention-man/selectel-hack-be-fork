@@ -47,8 +47,8 @@ class AuthControllerIntegrationTest {
 
     @Test
     void testTooShortRegistrationData() throws Exception {
-        UserEntity testUser = TestDataUtil.createTestUsers().get(1);
-        String userJson = objectMapper.writeValueAsString(testUser);
+        UserEntity shortUser = TestDataUtil.createTooShortUser();
+        String userJson = objectMapper.writeValueAsString(shortUser);
         mockMvc.perform(
                 MockMvcRequestBuilders.post("/registration")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -62,7 +62,6 @@ class AuthControllerIntegrationTest {
     void testLoginIsOccupied() throws Exception {
         UserEntity testUser = TestDataUtil.createTestUser();
         String userJson = objectMapper.writeValueAsString(testUser);
-
         userService.save(testUser);
 
         mockMvc.perform(

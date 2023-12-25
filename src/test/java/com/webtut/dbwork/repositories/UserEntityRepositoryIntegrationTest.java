@@ -18,16 +18,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith(SpringExtension.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class UserEntityRepositoryIntegrationTest {
-
     private final UserRepository underTest;
 
     @Autowired
-    public UserEntityRepositoryIntegrationTest(UserRepository underTest){
+    public UserEntityRepositoryIntegrationTest(UserRepository underTest) {
         this.underTest = underTest;
     }
 
     @Test
-    void testThatUserCanBeCreatedAndRecalled(){
+    void testThatUserCanBeCreatedAndRecalled() {
         UserEntity userEntity = TestDataUtil.createTestUser();
         underTest.save(userEntity);
         Optional<UserEntity> result = underTest.findById(userEntity.getUserId());
@@ -35,7 +34,7 @@ class UserEntityRepositoryIntegrationTest {
     }
 
     @Test
-    void testThatMultipleUsersCanBeCreatedAndRecalled(){
+    void testThatMultipleUsersCanBeCreatedAndRecalled() {
         List<UserEntity> userEntities = TestDataUtil.createTestUsers();
         underTest.saveAll(userEntities);
 

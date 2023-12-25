@@ -26,7 +26,7 @@ public class UserController {
     @GetMapping(path = "/users/{user_id}")
     public ResponseEntity<UserDto> getUser(
             @PathVariable("user_id") Long userId
-    ){
+    ) {
         Optional<UserDto> foundUser = userService.findById(userId);
         return foundUser.map(userDto -> new ResponseEntity<>(userDto, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
@@ -49,7 +49,7 @@ public class UserController {
     public ResponseEntity<UserDto> partialUpdateUser(
             @PathVariable("user_id") Long userId,
             @RequestBody UserDto userDto
-    ){
+    ) {
         if (!userService.isExists(userId))
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
@@ -61,7 +61,7 @@ public class UserController {
     @DeleteMapping(path = "/users/{user_id}")
     public ResponseEntity<HttpStatus> deleteUser(
             @PathVariable("user_id") Long userId
-    ){
+    ) {
         userService.delete(userId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
