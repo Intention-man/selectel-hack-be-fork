@@ -3,17 +3,22 @@ package com.webtut.dbwork.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.webtut.dbwork.TestDataUtil;
 import com.webtut.dbwork.domain.dto.PointDto;
+import com.webtut.dbwork.domain.dto.UserDto;
 import com.webtut.dbwork.domain.entities.PointEntity;
 import com.webtut.dbwork.domain.entities.UserEntity;
 import com.webtut.dbwork.mappers.Mapper;
 import com.webtut.dbwork.services.PointService;
+import com.webtut.dbwork.services.UserService;
+import com.webtut.dbwork.services.impl.AuthService;
+import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -21,21 +26,24 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @AutoConfigureMockMvc
-class PointControllerIntegrationTest {
-
-    private final Mapper<PointEntity, PointDto> pointMapper;
+class PointControllerIntegrationTest{
+    private String token;
     private final PointService pointService;
+    private final UserService userService;
+    private final AuthService authService;
     private final MockMvc mockMvc;
+    private final Mapper<PointEntity, PointDto> pointMapper;
     private final ObjectMapper objectMapper;
+    private final Mapper<UserEntity, UserDto> userMapper;
 
-    @Autowired
-    public PointControllerIntegrationTest(PointService pointService, Mapper<PointEntity, PointDto> pointMapper, MockMvc mockMvc, ObjectMapper objectMapper) {
-        this.mockMvc = mockMvc;
-        this.objectMapper = objectMapper;
-        this.pointService = pointService;
-        this.pointMapper = pointMapper;
+    @BeforeAll
+    void setUp() {
+        UserEntity user = TestDataUtil.createTestUser();
+        userService.save(user);
+        token = "Bearer " + authService.addToken(userMapper.mapTo(user));
     }
 
     @Test
@@ -49,6 +57,7 @@ class PointControllerIntegrationTest {
         mockMvc.perform(
                 MockMvcRequestBuilders.post("/points")
                         .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", token)
                         .content(pointJson)
         ).andExpect(
                 MockMvcResultMatchers.status().isCreated()
@@ -66,6 +75,7 @@ class PointControllerIntegrationTest {
         mockMvc.perform(
                 MockMvcRequestBuilders.post("/points")
                         .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", token)
                         .content(pointJson)
         ).andExpect(
                 MockMvcResultMatchers.jsonPath("$.pointId").isNumber()
@@ -89,6 +99,7 @@ class PointControllerIntegrationTest {
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/points")
                         .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", token)
                         .content(pointJson)
         ).andExpect(
                 MockMvcResultMatchers.status().isOk()
@@ -105,6 +116,7 @@ class PointControllerIntegrationTest {
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/points")
                         .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", token)
                         .content(pointJson)
         ).andExpect(
                 MockMvcResultMatchers.jsonPath("$[0].pointId").isNumber()
@@ -128,6 +140,7 @@ class PointControllerIntegrationTest {
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/points/" + testPoint.getPointId())
                         .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", token)
         ).andExpect(
                 MockMvcResultMatchers.status().isOk()
         );
@@ -143,6 +156,7 @@ class PointControllerIntegrationTest {
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/points/" + testPoint.getPointId())
                         .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", token)
                         .content(pointJson)
         ).andExpect(
                 MockMvcResultMatchers.jsonPath("$.pointId").isNumber()
@@ -170,6 +184,7 @@ class PointControllerIntegrationTest {
         mockMvc.perform(
                 MockMvcRequestBuilders.put("/points/" + savedPointEntity.getPointId())
                         .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", token)
                         .content(pointJson)
         ).andExpect(
                 MockMvcResultMatchers.jsonPath("$.pointId").isNumber()
@@ -193,6 +208,7 @@ class PointControllerIntegrationTest {
         mockMvc.perform(
                 MockMvcRequestBuilders.delete("/points/" + testPoint.getPointId())
                         .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", token)
         ).andExpect(MockMvcResultMatchers.status().isNoContent());
     }
 }

@@ -27,7 +27,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @AutoConfigureMockMvc
-class UserControllerIntegrationTest {
+class UserControllerIntegrationTest{
     private String token;
     private final UserService userService;
     private final AuthService authService;
@@ -36,7 +36,7 @@ class UserControllerIntegrationTest {
     private final Mapper<UserEntity, UserDto> userMapper;
 
     @BeforeAll
-    void setUp() {
+    void beforeAll() {
         UserEntity user = TestDataUtil.createTestUser();
         userService.save(user);
         token = "Bearer " + authService.addToken(userMapper.mapTo(user));
