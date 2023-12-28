@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Optional;
+
 @RestController
 @RequiredArgsConstructor
 @CrossOrigin
@@ -23,9 +25,10 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> login(@RequestBody UserDto userDto) {
-        HttpStatus authStatus = authService.tryAuth(userDto);
-        if (authStatus == HttpStatus.OK) {
-            String token = authService.addToken(userDto);
+        final Optional<UserDto> optionalUser = userService.findByLogin(userDto.getLogin());
+        HttpStatus authStatus = authService.tryAuth(userDto, optionalUser);
+        if (authStatus == HttpStatus.OK && optionalUser.isPresent()) {
+            String token = authService.addTokenForUser(optionalUser.get());
             return new ResponseEntity<>(new JwtResponse(token), authStatus);
         }
         return new ResponseEntity<>(authStatus);

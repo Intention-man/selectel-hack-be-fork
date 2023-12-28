@@ -9,62 +9,51 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.Set;
+
 @Component
 @RequiredArgsConstructor
 public class RequestInterceptor implements HandlerInterceptor {
 
     private final AuthService authService;
-    private static final String AUTHORIZATION = "Authorization";
+    private static final String AUTHORIZATION = "authorization";
     private static final String EMPTY_TOKEN = "";
+
+    private final Set<String> methodsToFilter = Set.of("GET", "POST", "PUT", "DELETE");
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         try {
-            System.out.println("1 - preHandle() : Before sending request to the Controller");
-            System.out.println("Method Type: " + request.getMethod());
-            System.out.println("Request URL: " + request.getServletPath());
-            if (shouldNotFilter(request))
-                return true;
-
-            final String token = getTokenFromRequest(request);
-            if (token.equals(EMPTY_TOKEN) || authService.userIdFromToken(token) == -1L) {
-                response.setStatus(403);
-                return false;
+            if (shouldFilter(request)){
+                final String token = getTokenFromRequest(request);
+                if (token.equals(EMPTY_TOKEN) || authService.userIdFromToken(token) == -1L) {
+                    response.setStatus(403);
+                    return false;
+                }
+                request.setAttribute("userId", authService.userIdFromToken(token));
             }
-
-            request.setAttribute("userId", authService.userIdFromToken(token));
+            return true;
         } catch (Exception e) {
-            e.printStackTrace();
             response.setStatus(500);
             return false;
         }
-        return true;
     }
-
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) {
-        //* Business logic just before the response reaches the client and the request is served
-        try {
-            System.out.println("2 - postHandle() : After the Controller serves the request (before returning back response to the client)");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        response.addHeader("Access-Control-Allow-Headers", "origin, content-type, accept, authorization");
+        response.addHeader("Access-Control-Allow-Credentials", "true");
+        response.addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD");
+        response.addHeader("Access-Control-Max-Age", "1209600");
     }
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
-        //* Business logic after request and response is Completed
-        try {
-            System.out.println("3 - afterCompletion() : After the request and Response is completed");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
-    private boolean shouldNotFilter(HttpServletRequest request) {
+    private boolean shouldFilter(HttpServletRequest request) {
         String path = request.getServletPath();
-        return path.matches("/login") || path.matches("/registration");
+        return methodsToFilter.contains(request.getMethod().toUpperCase()) && !(path.matches("/login") || path.matches("/registration"));
     }
 
     private String getTokenFromRequest(HttpServletRequest request) {

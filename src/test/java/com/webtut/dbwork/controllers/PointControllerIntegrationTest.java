@@ -43,7 +43,7 @@ class PointControllerIntegrationTest{
     void setUp() {
         UserEntity user = TestDataUtil.createTestUser();
         userService.save(user);
-        token = "Bearer " + authService.addToken(userMapper.mapTo(user));
+        token = "Bearer " + authService.addTokenForUser(userMapper.mapTo(user));
     }
 
     @Test
