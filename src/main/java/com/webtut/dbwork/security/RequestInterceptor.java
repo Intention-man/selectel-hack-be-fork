@@ -14,17 +14,15 @@ import java.util.Set;
 @Component
 @RequiredArgsConstructor
 public class RequestInterceptor implements HandlerInterceptor {
-
     private final AuthService authService;
     private static final String AUTHORIZATION = "authorization";
     private static final String EMPTY_TOKEN = "";
-
     private final Set<String> methodsToFilter = Set.of("GET", "POST", "PUT", "DELETE");
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         try {
-            if (shouldFilter(request)){
+            if (shouldFilter(request)) {
                 final String token = getTokenFromRequest(request);
                 if (token.equals(EMPTY_TOKEN) || authService.userIdFromToken(token) == -1L) {
                     response.setStatus(403);
@@ -49,6 +47,7 @@ public class RequestInterceptor implements HandlerInterceptor {
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
+        // pass
     }
 
     private boolean shouldFilter(HttpServletRequest request) {
@@ -60,7 +59,6 @@ public class RequestInterceptor implements HandlerInterceptor {
         final String bearer = request.getHeader(AUTHORIZATION);
         if (StringUtils.hasText(bearer) && bearer.startsWith("Bearer "))
             return bearer.substring(7);
-
         return EMPTY_TOKEN;
     }
 }
