@@ -1,0 +1,37 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: # manual run
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: main
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'openjdk'
+          cache: maven
+      - name: Build with Maven
+        run: mvn clean package -DskipTests
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh/
+          echo "${{ secrets.SERVER_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          echo "${{ secrets.SERVER_SSH_PUBLIC_KEY }}" > ~/.ssh/id_rsa.pub
+          chmod 600 ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa.pub
+          ssh-keyscan -H ${{ vars.SERVER_IP }} >> ~/.ssh/known_hosts
+      - name: Deploy builds to server
+        run: |
+          rsync -vrm target/${{ vars.TARGET_JAR_NAME }} ${{ vars.SERVER_USER }}@${{ vars.SERVER_IP }}:${{ vars.SERVER_WORKDIR }}/${{ vars.SERVER_BUILD_PATH }}/
+      - name: Restart server
+        run: |
+          ssh ${{ vars.SERVER_USER }}@${{ vars.SERVER_IP }} "cd ${{ vars.SERVER_WORKDIR }} && sudo docker-compose restart"
