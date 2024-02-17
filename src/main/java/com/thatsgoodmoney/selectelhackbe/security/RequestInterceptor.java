@@ -18,6 +18,7 @@ public class RequestInterceptor implements HandlerInterceptor {
     private static final String AUTHORIZATION = "authorization";
     private static final String EMPTY_TOKEN = "";
     private final Set<String> methodsToFilter = Set.of("GET", "POST", "PUT", "DELETE");
+    private final Set<String> filterIgnorePaths = Set.of("/login", "/registration", "/health-check");
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
@@ -52,7 +53,7 @@ public class RequestInterceptor implements HandlerInterceptor {
 
     private boolean shouldFilter(HttpServletRequest request) {
         String path = request.getServletPath();
-        return methodsToFilter.contains(request.getMethod().toUpperCase()) && !(path.matches("/login") || path.matches("/registration"));
+        return methodsToFilter.contains(request.getMethod().toUpperCase()) && !filterIgnorePaths.contains(path);
     }
 
     private String getTokenFromRequest(HttpServletRequest request) {
