@@ -8,11 +8,11 @@
 		<version>3.2.0</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.webtut</groupId>
-	<artifactId>dbwork</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>dbwork</name>
-	<description>Demo project for Spring Boot</description>
+	<groupId>com.thatsgoodmoney</groupId>
+	<artifactId>selectelhackbe</artifactId>
+	<version>1</version>
+	<name>selectelhackbe</name>
+	<description>Серверное приложение на Spring для проекта в рамках хакатона Selectel 2024</description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>
