@@ -1,8 +1,8 @@
 package com.thatsgoodmoney.selectelhackbe.mappers.impl;
 
+import com.thatsgoodmoney.selectelhackbe.domain.dto.UserDto;
 import com.thatsgoodmoney.selectelhackbe.domain.entities.UserEntity;
 import com.thatsgoodmoney.selectelhackbe.mappers.Mapper;
-import com.thatsgoodmoney.selectelhackbe.domain.dto.UserDto;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
