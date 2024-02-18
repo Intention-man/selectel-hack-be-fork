@@ -35,12 +35,13 @@ public class AuthController {
     }
 
     @PostMapping("/registration")
-    public ResponseEntity<HttpStatusCode> registration(@RequestBody UserDto userDto) {
+    public ResponseEntity<JwtResponse> registration(@RequestBody UserDto userDto) {
         if (userService.isUserExists(userDto))
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         if (!userService.isLoginAndPasswordValid(userDto))
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         userService.save(userDto);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        String token = authService.addTokenForUser(userDto);
+        return new ResponseEntity<>(new JwtResponse(token), HttpStatus.CREATED);
     }
 }
