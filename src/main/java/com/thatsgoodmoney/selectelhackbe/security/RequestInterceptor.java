@@ -1,6 +1,7 @@
 package com.thatsgoodmoney.selectelhackbe.security;
 
 import com.thatsgoodmoney.selectelhackbe.services.impl.AuthService;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -25,13 +26,18 @@ public class RequestInterceptor implements HandlerInterceptor {
         try {
             if (shouldFilter(request)) {
                 final String token = getTokenFromRequest(request);
-                if (token.equals(EMPTY_TOKEN) || authService.userIdFromToken(token) == -1L) {
+                Long idFromStorage = authService.userIdFromStorage(token);
+                Long idFromToken = authService.userIdFromToken(token);
+                if (token.equals(EMPTY_TOKEN) || idFromStorage == -1L || !idFromStorage.equals(idFromToken)) {
                     response.setStatus(403);
                     return false;
                 }
-                request.setAttribute("userId", authService.userIdFromToken(token));
+                request.setAttribute("userId", idFromToken);
             }
             return true;
+        } catch (JwtException e) {
+            response.setStatus(403);
+            return false;
         } catch (Exception e) {
             response.setStatus(500);
             return false;

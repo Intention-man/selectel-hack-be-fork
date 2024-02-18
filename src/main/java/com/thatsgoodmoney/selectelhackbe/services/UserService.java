@@ -1,7 +1,7 @@
 package com.thatsgoodmoney.selectelhackbe.services;
 
-import com.thatsgoodmoney.selectelhackbe.domain.entities.UserEntity;
 import com.thatsgoodmoney.selectelhackbe.domain.dto.UserDto;
+import com.thatsgoodmoney.selectelhackbe.domain.entities.UserEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

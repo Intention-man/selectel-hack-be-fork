@@ -1,10 +1,10 @@
 package com.thatsgoodmoney.selectelhackbe.controllers;
 
 
+import com.thatsgoodmoney.selectelhackbe.domain.dto.UserDto;
 import com.thatsgoodmoney.selectelhackbe.security.JwtResponse;
 import com.thatsgoodmoney.selectelhackbe.services.UserService;
 import com.thatsgoodmoney.selectelhackbe.services.impl.AuthService;
-import com.thatsgoodmoney.selectelhackbe.domain.dto.UserDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;

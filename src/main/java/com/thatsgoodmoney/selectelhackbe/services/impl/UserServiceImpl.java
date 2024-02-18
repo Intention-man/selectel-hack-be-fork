@@ -1,11 +1,11 @@
 package com.thatsgoodmoney.selectelhackbe.services.impl;
 
-import com.thatsgoodmoney.selectelhackbe.domain.entities.UserEntity;
-import com.thatsgoodmoney.selectelhackbe.mappers.Mapper;
-import com.thatsgoodmoney.selectelhackbe.services.UserService;
 import com.thatsgoodmoney.selectelhackbe.config.MapperConfig;
 import com.thatsgoodmoney.selectelhackbe.domain.dto.UserDto;
+import com.thatsgoodmoney.selectelhackbe.domain.entities.UserEntity;
+import com.thatsgoodmoney.selectelhackbe.mappers.Mapper;
 import com.thatsgoodmoney.selectelhackbe.repositories.UserRepository;
+import com.thatsgoodmoney.selectelhackbe.services.UserService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
