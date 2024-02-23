@@ -1,5 +1,6 @@
 package com.thatsgoodmoney.selectelhackbe.services;
 
+import com.thatsgoodmoney.selectelhackbe.domain.dto.CityDto;
 import com.thatsgoodmoney.selectelhackbe.domain.dto.CountryDto;
 import com.thatsgoodmoney.selectelhackbe.domain.entities.CountryEntity;
 import com.thatsgoodmoney.selectelhackbe.mappers.Mapper;
@@ -24,5 +25,10 @@ public class CountryService {
     public Optional<CountryDto> findById(Long id) {
         Optional<CountryEntity> entity = countryRepository.findById(id);
         return entity.map(mapper::mapTo);
+    }
+
+    public CountryDto save(CountryDto countryDto) {
+        CountryEntity countryEntity = mapper.mapFrom(countryDto);
+        return mapper.mapTo(countryRepository.save(countryEntity));
     }
 }

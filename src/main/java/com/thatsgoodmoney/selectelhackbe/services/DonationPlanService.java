@@ -38,12 +38,13 @@ public class DonationPlanService {
     public DonationPlanDto partialUpdate(Long donationPlanId, DonationPlanDto donationPlanDto) {
         donationPlanDto.setDonationPlanId(donationPlanId);
         return donationPlanRepository.findById(donationPlanId).map(existingDonationPlan -> {
-
-            Optional.of(donationPlanDto.getBloodClass()).ifPresent(existingDonationPlan::setBloodClass);
-            Optional.of(donationPlanDto.getPlanDate()).ifPresent(existingDonationPlan::setPlanDate);
-            Optional.of(donationPlanDto.getPaymentType()).ifPresent(existingDonationPlan::setPaymentType);
-            Optional.of(donationPlanDto.getIsOut()).ifPresent(existingDonationPlan::setIsOut);
-            return mapper.mapTo(donationPlanRepository.save(existingDonationPlan));
+            DonationPlanDto existingDonationPlanDto = mapper.mapTo(existingDonationPlan);
+            Optional.of(donationPlanDto.getBloodClass()).ifPresent(existingDonationPlanDto::setBloodClass);
+            Optional.of(donationPlanDto.getPlanDate()).ifPresent(existingDonationPlanDto::setPlanDate);
+            Optional.of(donationPlanDto.getPaymentType()).ifPresent(existingDonationPlanDto::setPaymentType);
+            Optional.of(donationPlanDto.getIsOut()).ifPresent(existingDonationPlanDto::setIsOut);
+            Optional.of(donationPlanDto.getBloodStationDto()).ifPresent(existingDonationPlanDto::setBloodStationDto);
+            return mapper.mapTo(donationPlanRepository.save(mapper.mapFrom(existingDonationPlanDto)));
         }).orElseThrow(() -> new RuntimeException("Donation Plan doesn't exist"));
     }
 

@@ -21,7 +21,6 @@ public class DonationController {
 
     @PostMapping
     public ResponseEntity<DonationDto> createDonation(
-            @RequestAttribute Long userId,
             @RequestBody DonationDto donationDto) {
         DonationDto savedDonationDto = donationService.save(donationDto);
         return new ResponseEntity<>(savedDonationDto, HttpStatus.CREATED);

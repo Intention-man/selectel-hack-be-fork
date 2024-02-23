@@ -1,6 +1,7 @@
 package com.thatsgoodmoney.selectelhackbe.services;
 
 import com.thatsgoodmoney.selectelhackbe.domain.dto.DonationDto;
+import com.thatsgoodmoney.selectelhackbe.domain.dto.DonationPlanDto;
 import com.thatsgoodmoney.selectelhackbe.domain.entities.DonationEntity;
 import com.thatsgoodmoney.selectelhackbe.mappers.Mapper;
 import com.thatsgoodmoney.selectelhackbe.repositories.DonationRepository;
@@ -52,15 +53,14 @@ public class DonationServiceImpl implements DonationService {
     public DonationDto partialUpdate(Long donationId, DonationDto donationDto) {
         donationDto.setDonationId(donationId);
         return donationRepository.findById(donationId).map(existingDonation -> {
-
-            Optional.of(donationDto.getBloodClass()).ifPresent(existingDonation::setBloodClass);
-            Optional.of(donationDto.getDonateAt()).ifPresent(existingDonation::setDonateAt);
-            Optional.of(donationDto.getPaymentType()).ifPresent(existingDonation::setPaymentType);
-            Optional.of(donationDto.getIsOut()).ifPresent(existingDonation::setIsOut);
-            Optional.of(donationDto.getWithImage()).ifPresent(existingDonation::setWithImage);
-
-
-            return donationMapper.mapTo(donationRepository.save(existingDonation));
+            DonationDto existingDonationDto = donationMapper.mapTo(existingDonation);
+            Optional.of(donationDto.getBloodClass()).ifPresent(existingDonationDto::setBloodClass);
+            Optional.of(donationDto.getDonateAt()).ifPresent(existingDonationDto::setDonateAt);
+            Optional.of(donationDto.getPaymentType()).ifPresent(existingDonationDto::setPaymentType);
+            Optional.of(donationDto.getIsOut()).ifPresent(existingDonationDto::setIsOut);
+            Optional.of(donationDto.getBloodStationDto()).ifPresent(existingDonationDto::setBloodStationDto);
+            Optional.of(donationDto.getWithImage()).ifPresent(existingDonationDto::setWithImage);
+            return donationMapper.mapTo(donationRepository.save(donationMapper.mapFrom(existingDonationDto)));
         }).orElseThrow(() -> new RuntimeException("Donation doesn't exists"));
     }
 

@@ -1,6 +1,7 @@
 package com.thatsgoodmoney.selectelhackbe.controllers;
 
 import com.thatsgoodmoney.selectelhackbe.domain.dto.CountryDto;
+import com.thatsgoodmoney.selectelhackbe.domain.dto.DonationDto;
 import com.thatsgoodmoney.selectelhackbe.domain.dto.RegionDto;
 import com.thatsgoodmoney.selectelhackbe.services.CountryService;
 import com.thatsgoodmoney.selectelhackbe.services.RegionService;
@@ -30,5 +31,11 @@ public class RegionController {
         Optional<RegionDto> foundRegion = regionService.findById(regionId);
         return foundRegion.map(regionDto -> new ResponseEntity<>(regionDto, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    @PostMapping
+    public ResponseEntity<RegionDto> createRegion(@RequestBody RegionDto regionDto) {
+        RegionDto savedRegionDto = regionService.save(regionDto);
+        return new ResponseEntity<>(savedRegionDto, HttpStatus.CREATED);
     }
 }

@@ -26,4 +26,9 @@ public class BloodStationService {
         return entity.map(mapper::mapTo);
     }
 
+    public BloodStationDto save(BloodStationDto bloodStationDto) {
+        BloodStationEntity bloodStationEntity = mapper.mapFrom(bloodStationDto);
+        return mapper.mapTo(bloodStationRepository.save(bloodStationEntity));
+    }
+
 }

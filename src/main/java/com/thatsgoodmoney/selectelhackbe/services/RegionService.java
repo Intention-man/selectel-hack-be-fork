@@ -25,4 +25,9 @@ public class RegionService {
         Optional<RegionEntity> entity = regionRepository.findById(id);
         return entity.map(mapper::mapTo);
     }
+
+    public RegionDto save(RegionDto regionDto) {
+        RegionEntity regionEntity = mapper.mapFrom(regionDto);
+        return mapper.mapTo(regionRepository.save(regionEntity));
+    }
 }

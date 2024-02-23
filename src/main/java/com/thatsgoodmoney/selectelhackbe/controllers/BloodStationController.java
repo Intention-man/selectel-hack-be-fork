@@ -2,6 +2,7 @@ package com.thatsgoodmoney.selectelhackbe.controllers;
 
 import com.thatsgoodmoney.selectelhackbe.domain.dto.BloodStationDto;
 import com.thatsgoodmoney.selectelhackbe.domain.dto.CityDto;
+import com.thatsgoodmoney.selectelhackbe.domain.dto.DonationDto;
 import com.thatsgoodmoney.selectelhackbe.services.BloodStationService;
 import com.thatsgoodmoney.selectelhackbe.services.CityService;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +31,13 @@ public class BloodStationController {
         Optional<BloodStationDto> foundBloodStation = bloodStationService.findById(bloodStationId);
         return foundBloodStation.map(bloodStationDto -> new ResponseEntity<>(bloodStationDto, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    @PostMapping
+    public ResponseEntity<BloodStationDto> createBloodStation(
+            @RequestBody BloodStationDto bloodStationDto) {
+        BloodStationDto savedBloodStationDto = bloodStationService.save(bloodStationDto);
+        return new ResponseEntity<>(savedBloodStationDto, HttpStatus.CREATED);
     }
 
     // мб что-то еще

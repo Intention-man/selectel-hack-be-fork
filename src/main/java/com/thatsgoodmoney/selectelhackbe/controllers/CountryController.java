@@ -1,6 +1,7 @@
 package com.thatsgoodmoney.selectelhackbe.controllers;
 
 import com.thatsgoodmoney.selectelhackbe.domain.dto.CountryDto;
+import com.thatsgoodmoney.selectelhackbe.domain.dto.DonationDto;
 import com.thatsgoodmoney.selectelhackbe.services.CountryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -28,5 +29,11 @@ public class CountryController {
         Optional<CountryDto> foundCountry = countryService.findById(countryId);
         return foundCountry.map(countryDto -> new ResponseEntity<>(countryDto, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    @PostMapping
+    public ResponseEntity<CountryDto> createCountry(@RequestBody CountryDto countryDto) {
+        CountryDto savedCountryDto = countryService.save(countryDto);
+        return new ResponseEntity<>(savedCountryDto, HttpStatus.CREATED);
     }
 }

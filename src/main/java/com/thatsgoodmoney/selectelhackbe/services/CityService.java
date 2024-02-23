@@ -30,4 +30,9 @@ public class CityService {
         Optional<CityEntity> entity = cityRepository.findByLatAndLng(lat, lng);
         return entity.map(mapper::mapTo);
     }
+
+    public CityDto save(CityDto cityDto) {
+        CityEntity cityEntity = mapper.mapFrom(cityDto);
+        return mapper.mapTo(cityRepository.save(cityEntity));
+    }
 }

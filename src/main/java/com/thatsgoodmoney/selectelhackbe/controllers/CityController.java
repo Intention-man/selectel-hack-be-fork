@@ -1,6 +1,7 @@
 package com.thatsgoodmoney.selectelhackbe.controllers;
 
 import com.thatsgoodmoney.selectelhackbe.domain.dto.CityDto;
+import com.thatsgoodmoney.selectelhackbe.domain.dto.DonationDto;
 import com.thatsgoodmoney.selectelhackbe.domain.dto.RegionDto;
 import com.thatsgoodmoney.selectelhackbe.services.CityService;
 import lombok.RequiredArgsConstructor;
@@ -36,5 +37,11 @@ public class CityController {
         Optional<CityDto> foundCity = cityService.findByLocation(lat, lng);
         return foundCity.map(cityDto -> new ResponseEntity<>(cityDto, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    @PostMapping
+    public ResponseEntity<CityDto> createCity(@RequestBody CityDto cityDto) {
+        CityDto savedCityDto = cityService.save(cityDto);
+        return new ResponseEntity<>(savedCityDto, HttpStatus.CREATED);
     }
 }
