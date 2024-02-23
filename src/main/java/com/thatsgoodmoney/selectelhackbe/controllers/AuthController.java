@@ -1,13 +1,13 @@
 package com.thatsgoodmoney.selectelhackbe.controllers;
 
 
+import com.thatsgoodmoney.selectelhackbe.domain.dto.LoginDto;
 import com.thatsgoodmoney.selectelhackbe.domain.dto.UserDto;
 import com.thatsgoodmoney.selectelhackbe.security.JwtResponse;
-import com.thatsgoodmoney.selectelhackbe.services.UserService;
-import com.thatsgoodmoney.selectelhackbe.services.impl.AuthService;
+import com.thatsgoodmoney.selectelhackbe.services.AuthService;
+import com.thatsgoodmoney.selectelhackbe.services.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,12 +21,12 @@ import java.util.Optional;
 @CrossOrigin
 public class AuthController {
     private final AuthService authService;
-    private final UserService userService;
+    private final UserServiceImpl userService;
 
     @PostMapping("/login")
-    public ResponseEntity<JwtResponse> login(@RequestBody UserDto userDto) {
-        final Optional<UserDto> optionalUser = userService.findByLogin(userDto.getLogin());
-        HttpStatus authStatus = authService.tryAuth(userDto, optionalUser);
+    public ResponseEntity<JwtResponse> login(@RequestBody LoginDto loginDto) {
+        final Optional<UserDto> optionalUser = userService.findByLogin(loginDto.getEmail());
+        HttpStatus authStatus = authService.tryAuth(loginDto, optionalUser);
         if (authStatus == HttpStatus.OK && optionalUser.isPresent()) {
             String token = authService.addTokenForUser(optionalUser.get());
             return new ResponseEntity<>(new JwtResponse(token), authStatus);
@@ -40,8 +40,8 @@ public class AuthController {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         if (!userService.isLoginAndPasswordValid(userDto))
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        userService.save(userDto);
-        String token = authService.addTokenForUser(userDto);
+        UserDto savedUser = userService.save(userDto);
+        String token = authService.addTokenForUser(savedUser);
         return new ResponseEntity<>(new JwtResponse(token), HttpStatus.CREATED);
     }
 }

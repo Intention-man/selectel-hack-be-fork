@@ -1,7 +1,7 @@
 package com.thatsgoodmoney.selectelhackbe.controllers;
 
 import com.thatsgoodmoney.selectelhackbe.domain.dto.UserDto;
-import com.thatsgoodmoney.selectelhackbe.services.UserService;
+import com.thatsgoodmoney.selectelhackbe.services.UserServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,9 +12,9 @@ import java.util.Optional;
 @RestController
 @CrossOrigin
 public class UserController {
-    private final UserService userService;
+    private final UserServiceImpl userService;
 
-    public UserController(UserService userService) {
+    public UserController(UserServiceImpl userService) {
         this.userService = userService;
     }
 
@@ -32,19 +32,6 @@ public class UserController {
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @PutMapping(path = "/users/{user_id}")
-    public ResponseEntity<UserDto> fullUpdateUser(
-            @PathVariable("user_id") Long userId,
-            @RequestBody UserDto userDto
-    ){
-        if (!userService.isExists(userId))
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
-        userDto.setUserId(userId);
-        UserDto savedUserDto = userService.save(userDto);
-        return new ResponseEntity<>(savedUserDto, HttpStatus.OK);
-    }
-
     @PatchMapping(path = "/users/{user_id}")
     public ResponseEntity<UserDto> partialUpdateUser(
             @PathVariable("user_id") Long userId,
@@ -54,8 +41,8 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
         userDto.setUserId(userId);
-        UserDto savedUserDto = userService.partialUpdate(userId, userDto);
-        return new ResponseEntity<>(savedUserDto, HttpStatus.OK);
+        UserDto savedLoginDto = userService.partialUpdate(userId, userDto);
+        return new ResponseEntity<>(savedLoginDto, HttpStatus.OK);
     }
 
     @DeleteMapping(path = "/users/{user_id}")

@@ -16,9 +16,10 @@ public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
-
-    private String login;
-
+    private String email;
     private String password;
-
+    private String firstName;
+    private String tag;
+    private String city;
+    private String bloodType;
 }
