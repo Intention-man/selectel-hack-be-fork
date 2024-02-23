@@ -2,7 +2,7 @@ package com.thatsgoodmoney.selectelhackbe.controllers;
 
 import com.thatsgoodmoney.selectelhackbe.domain.dto.CityDto;
 import com.thatsgoodmoney.selectelhackbe.domain.dto.RegionDto;
-import com.thatsgoodmoney.selectelhackbe.services.impl.CityService;
+import com.thatsgoodmoney.selectelhackbe.services.CityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +32,7 @@ public class CityController {
     }
 
     @GetMapping(path = "/by_location")
-    public ResponseEntity<CityDto> getCityByLocation(@RequestParam String lat, @RequestParam String lng) {
+    public ResponseEntity<CityDto> getCityByLocation(@RequestParam Double lat, @RequestParam Double lng) {
         Optional<CityDto> foundCity = cityService.findByLocation(lat, lng);
         return foundCity.map(cityDto -> new ResponseEntity<>(cityDto, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));

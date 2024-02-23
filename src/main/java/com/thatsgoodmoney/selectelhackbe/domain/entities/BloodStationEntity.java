@@ -5,6 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
+
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -15,15 +18,20 @@ import lombok.NoArgsConstructor;
 public class BloodStationEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long bloodStationId;
     @ManyToOne
-    @JoinColumn(name = "city_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "city_id", nullable = false)
     private CityEntity city;
     private String hasBloodGroup;
-    // private ???[] schedule;
-    private String lat;
-    private String lng;
-    private String bloodGroup;
+    @OneToMany(mappedBy = "bloodStationEntity", cascade = CascadeType.ALL)
+    private List<Schedule> schedule;
+    @OneToMany(mappedBy = "bloodStationEntity", cascade = CascadeType.ALL)
+    private List<PhoneNumber> phoneNumbers;
+    private Double lat;
+    private Double lng;
+//    @Type(type = "jsonb")
+//    @Column(columnDefinition = "jsonb")
+//    private List<String> bloodGroup;
     private String bloodStatus;
     private String title;
     private String parserUrl;

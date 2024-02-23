@@ -15,22 +15,29 @@ import lombok.NoArgsConstructor;
 public class DonationEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long donationId;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
 
-    private int bloodStationId;
+    @ManyToOne
+    @JoinColumn(name = "blood_station_id", nullable = false)
+    private BloodStationEntity bloodStation;
     private int imageId;
 
     @ManyToOne
-    @JoinColumn(name = "city_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "city_id", nullable = false)
     private CityEntity city;
+    private String legacyImage;
+    private String hasReply;
+    private String replyViewed;
+    private String allowedModify;
     private String firstName;
     private String lastName;
     private String middleName;
     private String donateAt;
+    private String rejectReason;
     private String bloodClass;
     private String paymentType;
     private boolean isOut;

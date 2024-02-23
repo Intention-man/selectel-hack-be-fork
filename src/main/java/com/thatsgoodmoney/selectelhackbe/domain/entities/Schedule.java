@@ -11,10 +11,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "regions")
-public class RegionEntity {
+@Table(name = "schedules")
+public class Schedule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long regionId;
-    private String title;
+    private Long id;
+
+    private String dow;
+    private String start;
+    @Column(name = "eend")
+    private String end;
+
+    @ManyToOne
+    @JoinColumn(name = "blood_station_id")
+    private BloodStationEntity bloodStationEntity;
 }

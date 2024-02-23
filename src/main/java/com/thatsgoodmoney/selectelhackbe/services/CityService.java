@@ -33,7 +33,7 @@ public class CityService {
         return entity.map(mapper::mapTo);
     }
 
-    public Optional<CityDto> findByLocation(String lat, String lng) {
+    public Optional<CityDto> findByLocation(Double lat, Double lng) {
         Optional<CityEntity> entity = cityRepository.findByLatAndLng(lat, lng);
         return entity.map(mapper::mapTo);
     }

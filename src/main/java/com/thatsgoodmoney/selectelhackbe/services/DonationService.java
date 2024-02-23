@@ -1,6 +1,6 @@
 package com.thatsgoodmoney.selectelhackbe.services;
 
-import com.thatsgoodmoney.selectelhackbe.domain.dto.DonationDto;
+import com.thatsgoodmoney.selectelhackbe.domain.dto.DonationRequestDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -8,16 +8,16 @@ import java.util.Optional;
 
 @Service
 public interface DonationService {
-    DonationDto save(DonationDto donationDto);
+    DonationRequestDto save(DonationRequestDto donationRequestDto);
 
-    List<DonationDto> findAllUserDonations(Long userId);
+    List<DonationRequestDto> findAllUserDonations(Long userId);
 
-    Optional<DonationDto> findById(Long donationId);
+    Optional<DonationRequestDto> findById(Long donationId);
 
     boolean isExists(Long donationId);
     boolean isExists(String donateAt);
 
-    DonationDto partialUpdate(Long donationId, DonationDto donationDto);
+    DonationRequestDto partialUpdate(Long donationId, DonationRequestDto donationRequestDto);
 
     void delete(Long donationId);
 }

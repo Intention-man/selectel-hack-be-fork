@@ -11,5 +11,5 @@ import java.util.Optional;
 public interface CityRepository extends CrudRepository<CityEntity, Long>,
         PagingAndSortingRepository<CityEntity, Long> {
 
-    Optional<CityEntity> findByLatAndLng(String lat, String lng);
+    Optional<CityEntity> findByLatAndLng(Double lat, Double lng);
 }

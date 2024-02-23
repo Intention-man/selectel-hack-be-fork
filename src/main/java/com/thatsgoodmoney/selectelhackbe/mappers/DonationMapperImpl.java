@@ -1,13 +1,12 @@
 package com.thatsgoodmoney.selectelhackbe.mappers;
 
-import com.thatsgoodmoney.selectelhackbe.domain.dto.DonationDto;
+import com.thatsgoodmoney.selectelhackbe.domain.dto.DonationRequestDto;
 import com.thatsgoodmoney.selectelhackbe.domain.entities.DonationEntity;
-import com.thatsgoodmoney.selectelhackbe.mappers.Mapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DonationMapperImpl implements Mapper<DonationEntity, DonationDto> {
+public class DonationMapperImpl implements Mapper<DonationEntity, DonationRequestDto> {
     private final ModelMapper modelMapper;
 
     public DonationMapperImpl(ModelMapper modelMapper){
@@ -15,12 +14,12 @@ public class DonationMapperImpl implements Mapper<DonationEntity, DonationDto> {
     }
 
     @Override
-    public DonationDto mapTo(DonationEntity donationEntity) {
-        return modelMapper.map(donationEntity, DonationDto.class);
+    public DonationRequestDto mapTo(DonationEntity donationEntity) {
+        return modelMapper.map(donationEntity, DonationRequestDto.class);
     }
 
     @Override
-    public DonationEntity mapFrom(DonationDto donationDto) {
-        return modelMapper.map(donationDto, DonationEntity.class);
+    public DonationEntity mapFrom(DonationRequestDto donationRequestDto) {
+        return modelMapper.map(donationRequestDto, DonationEntity.class);
     }
 }

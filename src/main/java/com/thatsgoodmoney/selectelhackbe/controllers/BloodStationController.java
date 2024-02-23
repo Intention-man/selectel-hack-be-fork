@@ -2,8 +2,8 @@ package com.thatsgoodmoney.selectelhackbe.controllers;
 
 import com.thatsgoodmoney.selectelhackbe.domain.dto.BloodStationDto;
 import com.thatsgoodmoney.selectelhackbe.domain.dto.CityDto;
-import com.thatsgoodmoney.selectelhackbe.services.impl.BloodStationService;
-import com.thatsgoodmoney.selectelhackbe.services.impl.CityService;
+import com.thatsgoodmoney.selectelhackbe.services.BloodStationService;
+import com.thatsgoodmoney.selectelhackbe.services.CityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

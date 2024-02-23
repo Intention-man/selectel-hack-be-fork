@@ -16,6 +16,6 @@ public class CityDto {
     private Long regionId;
     private Long countryId;
     private int priority;
-    private String lat;
-    private String lng;
+    private Double lat;
+    private Double lng;
 }

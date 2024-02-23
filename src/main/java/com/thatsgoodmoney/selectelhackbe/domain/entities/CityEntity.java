@@ -15,17 +15,17 @@ import lombok.NoArgsConstructor;
 public class CityEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long cityId;
     private String title;
     private String slug;
 
     @ManyToOne
-    @JoinColumn(name = "region_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "region_id", nullable = false)
     private RegionEntity region;
     @ManyToOne
-    @JoinColumn(name = "country_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "country_id", nullable = false)
     private CountryEntity country;
     private int priority;
-    private String lat;
-    private String lng;
+    private Double lat;
+    private Double lng;
 }

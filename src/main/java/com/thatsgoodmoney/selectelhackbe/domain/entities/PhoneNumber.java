@@ -11,10 +11,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "regions")
-public class RegionEntity {
+@Table(name = "phone_numbers")
+public class PhoneNumber {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long regionId;
-    private String title;
+    private Long id;
+
+    private String phone;
+    private String comment;
+
+    @ManyToOne
+    @JoinColumn(name = "blood_station_id")
+    private BloodStationEntity bloodStationEntity;
 }

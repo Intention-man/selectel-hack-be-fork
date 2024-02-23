@@ -9,17 +9,23 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class DonationDto {
-    private Long id;
-    private Long userId;
-
-    private int bloodStationId;
-    private int imageId;
-    private int cityId;
+public class DonationResponseDto {
+    private Long donationId;
+    private Long bloodStationId;
+    private BloodStationDto bloodStation;
+    private String image;
+    private Long imageId;
+    private Long cityId;
+    private CityDto city;
+    private String legacyImage;
+    private String hasReply;
+    private String replyViewed;
+    private String allowedModify;
     private String firstName;
     private String lastName;
     private String middleName;
     private String donateAt;
+    private String rejectReason;
     private String bloodClass;
     private String paymentType;
     private boolean isOut;

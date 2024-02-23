@@ -1,22 +1,30 @@
 package com.thatsgoodmoney.selectelhackbe.domain.dto;
 
+import com.thatsgoodmoney.selectelhackbe.domain.entities.PhoneNumber;
+import com.thatsgoodmoney.selectelhackbe.domain.entities.Schedule;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class BloodStationDto {
-    private Long id;
+    private Long bloodStationId;
     private Long cityId;
     private String hasBloodGroup;
-    // private ???[] schedule;
-    private String lat;
-    private String lng;
-    private String bloodGroup;
+
+    private List<Schedule> schedule;
+    private List<PhoneNumber> phoneNumbers;
+    private Double lat;
+    private Double lng;
+//    private String bloodGroup;
     private String bloodStatus;
     private String title;
     private String parserUrl;
