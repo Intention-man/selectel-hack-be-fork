@@ -1,7 +1,7 @@
 package com.thatsgoodmoney.selectelhackbe.controllers;
 
 import com.thatsgoodmoney.selectelhackbe.domain.dto.CountryDto;
-import com.thatsgoodmoney.selectelhackbe.services.impl.CountryService;
+import com.thatsgoodmoney.selectelhackbe.services.CountryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
