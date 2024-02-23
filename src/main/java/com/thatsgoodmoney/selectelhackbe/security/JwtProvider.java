@@ -1,7 +1,7 @@
 package com.thatsgoodmoney.selectelhackbe.security;
 
 
-import com.thatsgoodmoney.selectelhackbe.domain.dto.UserDto;
+import com.thatsgoodmoney.selectelhackbe.domain.dto.LoginDto;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import lombok.NonNull;
@@ -27,16 +27,16 @@ public class JwtProvider {
         this.jwtAccessSecret = Keys.hmacShaKeyFor(BASE64.decode(jwtAccessSecret));
     }
 
-    public String generateAccessToken(@NonNull UserDto userDto) {
+    public String generateAccessToken(@NonNull LoginDto loginDto) {
         final LocalDateTime now = LocalDateTime.now();
         final Instant accessExpirationInstant = now.plusMinutes(60).atZone(ZoneId.systemDefault()).toInstant();
         final Date accessExpiration = Date.from(accessExpirationInstant);
         return Jwts.builder()
-                .setSubject(userDto.getEmail())
+                .setSubject(loginDto.getEmail())
                 .setExpiration(accessExpiration)
                 .signWith(jwtAccessSecret)
-                .claim("login", userDto.getEmail())
-                .claim("userId", userDto.getId())
+                .claim("login", loginDto.getEmail())
+                .claim("userId", loginDto.getUserId())
                 .compact();
     }
 }

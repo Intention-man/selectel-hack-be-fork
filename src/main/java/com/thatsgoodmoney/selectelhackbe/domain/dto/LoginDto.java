@@ -9,12 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserDto {
+public class LoginDto {
     private Long userId;
     private String email;
     private String password;
-    private String firstName;
-    private String tag;
-    private String city;
-    private String bloodType;
 }

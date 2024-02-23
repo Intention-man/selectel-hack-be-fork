@@ -1,9 +1,9 @@
 package com.thatsgoodmoney.selectelhackbe.controllers;
 
 import com.thatsgoodmoney.selectelhackbe.domain.dto.DonationDto;
+import com.thatsgoodmoney.selectelhackbe.services.AuthService;
 import com.thatsgoodmoney.selectelhackbe.services.DonationService;
-import com.thatsgoodmoney.selectelhackbe.services.UserService;
-import com.thatsgoodmoney.selectelhackbe.services.impl.AuthService;
+import com.thatsgoodmoney.selectelhackbe.services.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +20,7 @@ import java.util.Optional;
 @RequestMapping("/donations")
 public class DonationController {
     private final DonationService donationService;
-    private final UserService userService;
+    private final UserServiceImpl userService;
     private final AuthService authService;
 
     @PostMapping

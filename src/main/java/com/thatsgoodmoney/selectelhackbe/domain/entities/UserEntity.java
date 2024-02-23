@@ -14,11 +14,12 @@ import lombok.NoArgsConstructor;
 @Table(name = "users")
 public class UserEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_id_seq")
+    private Long userId;
     private String email;
-
     private String password;
-
+    private String firstName;
+    private String tag;
+    private String city;
+    private String bloodType;
 }

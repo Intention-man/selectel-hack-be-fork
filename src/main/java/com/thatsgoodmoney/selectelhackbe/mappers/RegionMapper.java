@@ -1,4 +1,4 @@
-package com.thatsgoodmoney.selectelhackbe.mappers.impl;
+package com.thatsgoodmoney.selectelhackbe.mappers;
 
 import com.thatsgoodmoney.selectelhackbe.domain.dto.RegionDto;
 import com.thatsgoodmoney.selectelhackbe.domain.entities.RegionEntity;

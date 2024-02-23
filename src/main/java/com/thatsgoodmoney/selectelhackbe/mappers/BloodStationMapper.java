@@ -1,4 +1,4 @@
-package com.thatsgoodmoney.selectelhackbe.mappers.impl;
+package com.thatsgoodmoney.selectelhackbe.mappers;
 
 import com.thatsgoodmoney.selectelhackbe.domain.dto.BloodStationDto;
 import com.thatsgoodmoney.selectelhackbe.domain.dto.CityDto;
