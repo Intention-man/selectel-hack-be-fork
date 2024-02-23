@@ -22,7 +22,7 @@ public class Schedule {
     @Column(name = "eend")
     private String end;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "blood_station_id")
     private BloodStationEntity bloodStationEntity;
 }

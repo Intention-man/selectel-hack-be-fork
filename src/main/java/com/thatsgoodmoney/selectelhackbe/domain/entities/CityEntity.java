@@ -19,10 +19,10 @@ public class CityEntity {
     private String title;
     private String slug;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "region_id", nullable = false)
     private RegionEntity region;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "country_id", nullable = false)
     private CountryEntity country;
     private Integer priority;

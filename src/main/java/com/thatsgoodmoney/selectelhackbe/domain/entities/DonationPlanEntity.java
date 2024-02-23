@@ -16,10 +16,10 @@ public class DonationPlanEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long donationPlanId;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "blood_station_id", nullable = false)
     private BloodStationEntity bloodStation;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
 

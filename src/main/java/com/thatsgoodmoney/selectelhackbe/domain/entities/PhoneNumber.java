@@ -20,7 +20,7 @@ public class PhoneNumber {
     private String phone;
     private String comment;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "blood_station_id")
     private BloodStationEntity bloodStationEntity;
 }

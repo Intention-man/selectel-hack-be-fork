@@ -20,7 +20,7 @@ public class BloodStationEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long bloodStationId;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "city_id", nullable = false)
     private CityEntity city;
     private String hasBloodGroup;
