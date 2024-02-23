@@ -1,4 +1,4 @@
-package com.thatsgoodmoney.selectelhackbe.services.impl;
+package com.thatsgoodmoney.selectelhackbe.services;
 
 import com.thatsgoodmoney.selectelhackbe.domain.dto.RegionDto;
 import com.thatsgoodmoney.selectelhackbe.domain.entities.RegionEntity;
