@@ -3,7 +3,7 @@ package com.thatsgoodmoney.selectelhackbe.services;
 import com.thatsgoodmoney.selectelhackbe.config.MapperConfig;
 import com.thatsgoodmoney.selectelhackbe.domain.dto.LoginDto;
 import com.thatsgoodmoney.selectelhackbe.domain.dto.UserDto;
-import com.thatsgoodmoney.selectelhackbe.mappers.impl.UserMapperImpl;
+import com.thatsgoodmoney.selectelhackbe.mappers.UserMapperImpl;
 import com.thatsgoodmoney.selectelhackbe.security.JwtDecoder;
 import com.thatsgoodmoney.selectelhackbe.security.JwtProvider;
 import io.jsonwebtoken.Claims;

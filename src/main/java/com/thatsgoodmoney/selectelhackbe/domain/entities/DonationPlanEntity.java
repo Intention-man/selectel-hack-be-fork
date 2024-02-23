@@ -11,33 +11,24 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "donations")
-public class DonationEntity {
+@Table(name = "donation_plans")
+public class DonationPlanEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long donationId;
-
+    private Long donationPlanId;
+    @ManyToOne
+    @JoinColumn(name = "blood_station_id", nullable = false)
+    private BloodStationEntity bloodStation;
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
 
-    @ManyToOne
-    @JoinColumn(name = "blood_station_id", nullable = false)
-    private BloodStationEntity bloodStation;
-
-    private String firstName;
-    private String lastName;
-    private String middleName;
-    private String donateAt;
-
     private String bloodClass;
+    private String planDate;
     private String paymentType;
+    private String status;
     private Boolean isOut;
-    private Double volume;
-    private Double paymentCost;
-    private String onModerationDate;
-    private Boolean withImage;
-    private Boolean createdUsingOcr;
+    private Integer contentType;
+    private Integer donation;
 
-    private Long imageId;
 }

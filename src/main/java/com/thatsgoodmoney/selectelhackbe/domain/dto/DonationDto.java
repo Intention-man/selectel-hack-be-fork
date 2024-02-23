@@ -11,21 +11,19 @@ import lombok.NoArgsConstructor;
 @Builder
 public class DonationDto {
     private Long donationId;
-    private Long userId;
-
-    private int bloodStationId;
-    private int imageId;
-    private int cityId;
+    private UserDto userDto;
+    private BloodStationDto bloodStationDto;
     private String firstName;
     private String lastName;
     private String middleName;
     private String donateAt;
     private String bloodClass;
     private String paymentType;
-    private boolean isOut;
-    private double volume;
-    private double paymentCost;
+    private Boolean isOut;
+    private Double volume;
+    private Double paymentCost;
     private String onModerationDate;
-    private boolean withImage;
-    private boolean createdUsingOcr;
+    private Boolean withImage;
+    private Boolean createdUsingOcr;
+    private Long imageId;
 }
