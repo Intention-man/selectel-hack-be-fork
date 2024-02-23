@@ -36,7 +36,7 @@ public class AuthService {
 
     public String addTokenForUser(UserDto foundUser){
         final String accessToken = jwtProvider.generateAccessToken(foundUser);
-        tokenStorage.put(accessToken, foundUser.getUserId());
+        tokenStorage.put(accessToken, foundUser.getId());
         return accessToken;
     }
 

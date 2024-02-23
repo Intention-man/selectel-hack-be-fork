@@ -15,6 +15,7 @@ public interface DonationService {
     Optional<DonationDto> findById(Long donationId);
 
     boolean isExists(Long donationId);
+    boolean isExists(String donateAt);
 
     DonationDto partialUpdate(Long donationId, DonationDto donationDto);
 

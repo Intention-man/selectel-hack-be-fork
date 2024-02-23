@@ -40,7 +40,7 @@ public class UserController {
         if (!userService.isExists(userId))
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
-        userDto.setUserId(userId);
+        userDto.setId(userId);
         UserDto savedUserDto = userService.save(userDto);
         return new ResponseEntity<>(savedUserDto, HttpStatus.OK);
     }
@@ -53,7 +53,7 @@ public class UserController {
         if (!userService.isExists(userId))
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
-        userDto.setUserId(userId);
+        userDto.setId(userId);
         UserDto savedUserDto = userService.partialUpdate(userId, userDto);
         return new ResponseEntity<>(savedUserDto, HttpStatus.OK);
     }

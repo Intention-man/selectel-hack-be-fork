@@ -31,7 +31,7 @@ public class DonationServiceImpl implements DonationService {
     @Override
     public List<DonationDto> findAllUserDonations(Long userId) {
         return StreamSupport.stream(donationRepository.findAll().spliterator(), false)
-                .filter(donationEntity -> Objects.equals(donationEntity.getUser().getUserId(), userId))
+                .filter(donationEntity -> Objects.equals(donationEntity.getUser().getId(), userId))
                 .map(donationMapper::mapTo).toList();
     }
 
@@ -47,20 +47,30 @@ public class DonationServiceImpl implements DonationService {
     }
 
     @Override
+    public boolean isExists(String donateAt) {
+        return donationRepository.existsByDonateAt(donateAt);
+    }
+
+
+    @Override
     public DonationDto partialUpdate(Long donationId, DonationDto donationDto) {
-        donationDto.setDonationId(donationId);
+        donationDto.setId(donationId);
         return donationRepository.findById(donationId).map(existingDonation -> {
 
             Optional.of(donationDto.getBloodClass()).ifPresent(existingDonation::setBloodClass);
             Optional.of(donationDto.getDonateAt()).ifPresent(existingDonation::setDonateAt);
             Optional.of(donationDto.getPaymentType()).ifPresent(existingDonation::setPaymentType);
             Optional.of(donationDto.isOut()).ifPresent(existingDonation::setOut);
+            //Optional.of(donationDto.getBloodStationId()).ifPresent(existingDonation::setBloodStation);
+            Optional.of(donationDto.isWithImage()).ifPresent(existingDonation::setWithImage);
+            //Optional.of(donationDto.getCityId()).ifPresent(existingDonation::setCity);
+
             return donationMapper.mapTo(donationRepository.save(existingDonation));
-        }).orElseThrow(() -> new RuntimeException("Point doesn't exists"));
+        }).orElseThrow(() -> new RuntimeException("Donation doesn't exists"));
     }
 
     @Override
-    public void delete(Long pointId) {
-        donationRepository.deleteById(pointId);
+    public void delete(Long donationId) {
+        donationRepository.deleteById(donationId);
     }
 }

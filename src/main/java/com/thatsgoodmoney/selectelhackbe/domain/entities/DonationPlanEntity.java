@@ -11,14 +11,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "users")
-public class UserEntity {
+@Table(name = "donation_plans")
+public class DonationPlanEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private String email;
-
-    private String password;
 
 }

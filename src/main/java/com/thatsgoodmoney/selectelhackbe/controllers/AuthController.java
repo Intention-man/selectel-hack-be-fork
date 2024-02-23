@@ -7,7 +7,6 @@ import com.thatsgoodmoney.selectelhackbe.services.UserService;
 import com.thatsgoodmoney.selectelhackbe.services.impl.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,7 +24,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> login(@RequestBody UserDto userDto) {
-        final Optional<UserDto> optionalUser = userService.findByLogin(userDto.getLogin());
+        final Optional<UserDto> optionalUser = userService.findByLogin(userDto.getEmail());
         HttpStatus authStatus = authService.tryAuth(userDto, optionalUser);
         if (authStatus == HttpStatus.OK && optionalUser.isPresent()) {
             String token = authService.addTokenForUser(optionalUser.get());

@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class DonationDto {
-    private Long donationId;
+    private Long id;
     private Long userId;
 
     private int bloodStationId;

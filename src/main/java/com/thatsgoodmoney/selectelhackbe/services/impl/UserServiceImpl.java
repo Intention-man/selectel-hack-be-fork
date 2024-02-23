@@ -62,7 +62,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean isUserExists(UserDto userDto) {
         UserEntity userEntity = userMapper.mapFrom(userDto);
-        Optional<UserEntity> optionalUser = userRepository.findByLogin(userEntity.getLogin());
+        Optional<UserEntity> optionalUser = userRepository.findByLogin(userEntity.getEmail());
         if (optionalUser.isPresent()) {
             UserEntity foundUser = optionalUser.get();
             return MapperConfig.encoder().matches(userEntity.getPassword(), foundUser.getPassword());
@@ -77,9 +77,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto partialUpdate(Long userId, UserDto userDto) {
-        userDto.setUserId(userId);
+        userDto.setId(userId);
         return userRepository.findById(userId).map(existingUser -> {
-            Optional.ofNullable(userDto.getLogin()).ifPresent(existingUser::setLogin);
+            Optional.ofNullable(userDto.getEmail()).ifPresent(existingUser::setEmail);
             Optional.ofNullable(userDto.getPassword()).ifPresent(existingUser::setPassword);
             return userMapper.mapTo(userRepository.save(existingUser));
         }).orElseThrow(() -> new RuntimeException("User doesn't exists"));
@@ -91,6 +91,6 @@ public class UserServiceImpl implements UserService {
     }
 
     public boolean isLoginAndPasswordValid(UserDto userDto){
-        return userDto.getLogin().length() >= 6 && userDto.getPassword().length() >= 6;
+        return userDto.getEmail().length() >= 6 && userDto.getPassword().length() >= 6;
     }
 }

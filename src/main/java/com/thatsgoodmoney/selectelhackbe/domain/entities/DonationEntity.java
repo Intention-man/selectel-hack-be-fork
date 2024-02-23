@@ -15,15 +15,18 @@ import lombok.NoArgsConstructor;
 public class DonationEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long donationId;
+    private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     private UserEntity user;
 
     private int bloodStationId;
     private int imageId;
-    private int cityId;
+
+    @ManyToOne
+    @JoinColumn(name = "city_id", referencedColumnName = "id", nullable = false)
+    private CityEntity city;
     private String firstName;
     private String lastName;
     private String middleName;

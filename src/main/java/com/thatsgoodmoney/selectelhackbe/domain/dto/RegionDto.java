@@ -9,10 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserDto {
+public class RegionDto {
     private Long id;
-
-    private String email;
-
-    private String password;
+    private String title;
 }
