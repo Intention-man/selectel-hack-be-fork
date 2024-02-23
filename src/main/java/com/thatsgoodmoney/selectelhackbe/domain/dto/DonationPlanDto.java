@@ -9,21 +9,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class DonationPlanResponseDto {
+public class DonationPlanDto {
     private Long donationPlanId;
-    private String event;
-    private Long bloodStationId;
-    private BloodStationDto bloodStation;
-    private Long cityId;
-    private CityDto city;
-    private String createdAt;
-    private String updatedAt;
+    private BloodStationDto bloodStationDto;
+    private UserDto userDto;
     private String bloodClass;
     private String planDate;
     private String paymentType;
     private String status;
-    private boolean isOut;
-    private int contentType;
-    private int donation;
-    private Long userId;
+    private Boolean isOut;
+    private Integer contentType;
+    private Integer donation;
 }

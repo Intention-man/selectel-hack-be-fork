@@ -5,6 +5,7 @@ import com.thatsgoodmoney.selectelhackbe.domain.dto.UserDto;
 import com.thatsgoodmoney.selectelhackbe.domain.entities.UserEntity;
 import com.thatsgoodmoney.selectelhackbe.mappers.UserMapperImpl;
 import com.thatsgoodmoney.selectelhackbe.repositories.UserRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,14 +13,10 @@ import java.util.Optional;
 import java.util.stream.StreamSupport;
 
 @Service
+@AllArgsConstructor
 public class UserServiceImpl {
     private final UserRepository userRepository;
     private final UserMapperImpl userMapper;
-
-    public UserServiceImpl(UserRepository userRepository, UserMapperImpl userMapper) {
-        this.userRepository = userRepository;
-        this.userMapper = userMapper;
-    }
 
     public UserDto save(UserDto userDto) {
         UserEntity userEntity = userMapper.userDtoToEntity(userDto);

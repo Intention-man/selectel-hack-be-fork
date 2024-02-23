@@ -25,7 +25,7 @@ public class CityEntity {
     @ManyToOne
     @JoinColumn(name = "country_id", nullable = false)
     private CountryEntity country;
-    private int priority;
+    private Integer priority;
     private Double lat;
     private Double lng;
 }

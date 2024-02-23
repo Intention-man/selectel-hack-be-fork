@@ -1,9 +1,10 @@
 package com.thatsgoodmoney.selectelhackbe.services;
 
-import com.thatsgoodmoney.selectelhackbe.domain.dto.DonationRequestDto;
+import com.thatsgoodmoney.selectelhackbe.domain.dto.DonationDto;
 import com.thatsgoodmoney.selectelhackbe.domain.entities.DonationEntity;
 import com.thatsgoodmoney.selectelhackbe.mappers.Mapper;
 import com.thatsgoodmoney.selectelhackbe.repositories.DonationRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,30 +13,26 @@ import java.util.Optional;
 import java.util.stream.StreamSupport;
 
 @Service
+@AllArgsConstructor
 public class DonationServiceImpl implements DonationService {
     private final DonationRepository donationRepository;
-    private final Mapper<DonationEntity, DonationRequestDto> donationMapper;
-
-    public DonationServiceImpl(DonationRepository donationRepository, Mapper<DonationEntity, DonationRequestDto> donationMapper) {
-        this.donationRepository = donationRepository;
-        this.donationMapper = donationMapper;
-    }
+    private final Mapper<DonationEntity, DonationDto> donationMapper;
 
     @Override
-    public DonationRequestDto save(DonationRequestDto donationRequestDto) {
-        DonationEntity donationEntity = donationMapper.mapFrom(donationRequestDto);
+    public DonationDto save(DonationDto donationDto) {
+        DonationEntity donationEntity = donationMapper.mapFrom(donationDto);
         return donationMapper.mapTo(donationRepository.save(donationEntity));
     }
 
     @Override
-    public List<DonationRequestDto> findAllUserDonations(Long userId) {
+    public List<DonationDto> findAllUserDonations(Long userId) {
         return StreamSupport.stream(donationRepository.findAll().spliterator(), false)
                 .filter(donationEntity -> Objects.equals(donationEntity.getUser().getUserId(), userId))
                 .map(donationMapper::mapTo).toList();
     }
 
     @Override
-    public Optional<DonationRequestDto> findById(Long donationId) {
+    public Optional<DonationDto> findById(Long donationId) {
         Optional<DonationEntity> optionalDonationDto = donationRepository.findById(donationId);
         return optionalDonationDto.map(donationMapper::mapTo);
     }
@@ -52,17 +49,16 @@ public class DonationServiceImpl implements DonationService {
 
 
     @Override
-    public DonationRequestDto partialUpdate(Long donationId, DonationRequestDto donationRequestDto) {
-        donationRequestDto.setDonationId(donationId);
+    public DonationDto partialUpdate(Long donationId, DonationDto donationDto) {
+        donationDto.setDonationId(donationId);
         return donationRepository.findById(donationId).map(existingDonation -> {
 
-            Optional.of(donationRequestDto.getBloodClass()).ifPresent(existingDonation::setBloodClass);
-            Optional.of(donationRequestDto.getDonateAt()).ifPresent(existingDonation::setDonateAt);
-            Optional.of(donationRequestDto.getPaymentType()).ifPresent(existingDonation::setPaymentType);
-            Optional.of(donationRequestDto.isOut()).ifPresent(existingDonation::setOut);
-            //Optional.of(donationDto.getBloodStationId()).ifPresent(existingDonation::setBloodStation);
-            Optional.of(donationRequestDto.isWithImage()).ifPresent(existingDonation::setWithImage);
-            //Optional.of(donationDto.getCityId()).ifPresent(existingDonation::setCity);
+            Optional.of(donationDto.getBloodClass()).ifPresent(existingDonation::setBloodClass);
+            Optional.of(donationDto.getDonateAt()).ifPresent(existingDonation::setDonateAt);
+            Optional.of(donationDto.getPaymentType()).ifPresent(existingDonation::setPaymentType);
+            Optional.of(donationDto.getIsOut()).ifPresent(existingDonation::setIsOut);
+            Optional.of(donationDto.getWithImage()).ifPresent(existingDonation::setWithImage);
+
 
             return donationMapper.mapTo(donationRepository.save(existingDonation));
         }).orElseThrow(() -> new RuntimeException("Donation doesn't exists"));

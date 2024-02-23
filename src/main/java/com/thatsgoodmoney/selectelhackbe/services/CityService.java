@@ -1,27 +1,20 @@
 package com.thatsgoodmoney.selectelhackbe.services;
 
 import com.thatsgoodmoney.selectelhackbe.domain.dto.CityDto;
-import com.thatsgoodmoney.selectelhackbe.domain.dto.CountryDto;
 import com.thatsgoodmoney.selectelhackbe.domain.entities.CityEntity;
-import com.thatsgoodmoney.selectelhackbe.domain.entities.CountryEntity;
 import com.thatsgoodmoney.selectelhackbe.mappers.Mapper;
 import com.thatsgoodmoney.selectelhackbe.repositories.CityRepository;
-import com.thatsgoodmoney.selectelhackbe.repositories.CountryRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class CityService {
     private final CityRepository cityRepository;
     private final Mapper<CityEntity, CityDto> mapper;
-
-    public CityService(CityRepository cityRepository, Mapper<CityEntity, CityDto> mapper) {
-        this.cityRepository = cityRepository;
-        this.mapper = mapper;
-    }
 
     public List<CityDto> findAllCities() {
         List<CityEntity> entities = (List<CityEntity>) cityRepository.findAll();

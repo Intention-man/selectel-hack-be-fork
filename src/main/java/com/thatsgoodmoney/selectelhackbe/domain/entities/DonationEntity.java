@@ -24,26 +24,20 @@ public class DonationEntity {
     @ManyToOne
     @JoinColumn(name = "blood_station_id", nullable = false)
     private BloodStationEntity bloodStation;
-    private int imageId;
 
-    @ManyToOne
-    @JoinColumn(name = "city_id", nullable = false)
-    private CityEntity city;
-    private String legacyImage;
-    private String hasReply;
-    private String replyViewed;
-    private String allowedModify;
     private String firstName;
     private String lastName;
     private String middleName;
     private String donateAt;
-    private String rejectReason;
+
     private String bloodClass;
     private String paymentType;
-    private boolean isOut;
-    private double volume;
-    private double paymentCost;
+    private Boolean isOut;
+    private Double volume;
+    private Double paymentCost;
     private String onModerationDate;
-    private boolean withImage;
-    private boolean createdUsingOcr;
+    private Boolean withImage;
+    private Boolean createdUsingOcr;
+
+    private Long imageId;
 }

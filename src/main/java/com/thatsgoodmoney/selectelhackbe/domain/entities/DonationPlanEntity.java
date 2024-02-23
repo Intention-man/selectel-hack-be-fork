@@ -20,14 +20,15 @@ public class DonationPlanEntity {
     @JoinColumn(name = "blood_station_id", nullable = false)
     private BloodStationEntity bloodStation;
     @ManyToOne
-    @JoinColumn(name = "city_id", nullable = false)
-    private CityEntity city;
+    @JoinColumn(name = "user_id", nullable = false)
+    private UserEntity user;
+
     private String bloodClass;
     private String planDate;
     private String paymentType;
     private String status;
-    private boolean isOut;
-    private int contentType;
-    private int donation;
-    private Long userId;
+    private Boolean isOut;
+    private Integer contentType;
+    private Integer donation;
+
 }

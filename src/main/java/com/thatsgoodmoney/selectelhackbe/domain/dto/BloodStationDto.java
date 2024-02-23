@@ -1,15 +1,9 @@
 package com.thatsgoodmoney.selectelhackbe.domain.dto;
 
-import com.thatsgoodmoney.selectelhackbe.domain.entities.PhoneNumber;
-import com.thatsgoodmoney.selectelhackbe.domain.entities.Schedule;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -17,18 +11,14 @@ import java.util.List;
 @Builder
 public class BloodStationDto {
     private Long bloodStationId;
-    private Long cityId;
+    private CityDto cityDto;
     private String hasBloodGroup;
-
-    private List<Schedule> schedule;
-    private List<PhoneNumber> phoneNumbers;
     private Double lat;
     private Double lng;
-//    private String bloodGroup;
     private String bloodStatus;
     private String title;
     private String parserUrl;
-    private boolean isGetFromParser;
+    private Boolean isGetFromParser;
     private String oPlus;
     private String oMinus;
     private String aPlus;
@@ -47,9 +37,9 @@ public class BloodStationDto {
     private String phones;
     private String email;
     private String worktime;
-    private boolean withoutRegistration;
-    private boolean withTyping;
-    private boolean forMoscow;
-    private boolean closed;
-    private int priority;
+    private Boolean withoutRegistration;
+    private Boolean withTyping;
+    private Boolean forMoscow;
+    private Boolean closed;
+    private Integer priority;
 }

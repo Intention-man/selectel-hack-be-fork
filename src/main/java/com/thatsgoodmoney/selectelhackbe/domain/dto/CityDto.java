@@ -10,12 +10,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class CityDto {
-    private Long id;
+    private Long cityId;
     private String title;
     private String slug;
-    private Long regionId;
-    private Long countryId;
-    private int priority;
+    private RegionDto regionDto;
+    private CountryDto countryDto;
+    private Integer priority;
     private Double lat;
     private Double lng;
 }

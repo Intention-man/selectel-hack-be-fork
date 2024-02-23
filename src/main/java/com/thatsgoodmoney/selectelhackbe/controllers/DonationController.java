@@ -1,6 +1,6 @@
 package com.thatsgoodmoney.selectelhackbe.controllers;
 
-import com.thatsgoodmoney.selectelhackbe.domain.dto.DonationRequestDto;
+import com.thatsgoodmoney.selectelhackbe.domain.dto.DonationDto;
 import com.thatsgoodmoney.selectelhackbe.services.DonationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,24 +20,23 @@ public class DonationController {
     private final DonationService donationService;
 
     @PostMapping
-    public ResponseEntity<DonationRequestDto> createDonation(
+    public ResponseEntity<DonationDto> createDonation(
             @RequestAttribute Long userId,
-            @RequestBody DonationRequestDto donationRequestDto) {
-        donationRequestDto.setUserId(userId);
-        DonationRequestDto savedDonationRequestDto = donationService.save(donationRequestDto);
-        return new ResponseEntity<>(savedDonationRequestDto, HttpStatus.CREATED);
+            @RequestBody DonationDto donationDto) {
+        DonationDto savedDonationDto = donationService.save(donationDto);
+        return new ResponseEntity<>(savedDonationDto, HttpStatus.CREATED);
     }
 
     @GetMapping
-    public ResponseEntity<List<DonationRequestDto>> listUsersDonations(
+    public ResponseEntity<List<DonationDto>> listUsersDonations(
             @RequestAttribute Long userId) {
         return new ResponseEntity<>(donationService.findAllUserDonations(userId), HttpStatus.OK);
     }
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<DonationRequestDto> getDonation(
+    public ResponseEntity<DonationDto> getDonation(
             @PathVariable("id") Long donationId) {
-        Optional<DonationRequestDto> foundDonation = donationService.findById(donationId);
+        Optional<DonationDto> foundDonation = donationService.findById(donationId);
         return foundDonation.map(donationDto -> new ResponseEntity<>(donationDto, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
@@ -52,12 +51,12 @@ public class DonationController {
     }
 
     @PutMapping(path = "/{id}")
-    public ResponseEntity<DonationRequestDto> save(
+    public ResponseEntity<DonationDto> save(
             @PathVariable("id") Long donationId,
-            @RequestBody DonationRequestDto donationRequestDto
+            @RequestBody DonationDto donationDto
     ) {
-        donationRequestDto.setDonationId(donationId);
-        DonationRequestDto savedUpdatedDonation = donationService.save(donationRequestDto);
+        donationDto.setDonationId(donationId);
+        DonationDto savedUpdatedDonation = donationService.save(donationDto);
         if (donationService.isExists(donationId))
             return new ResponseEntity<>(savedUpdatedDonation, HttpStatus.OK);
 
@@ -65,16 +64,16 @@ public class DonationController {
     }
 
     @PatchMapping(path = "/{id}")
-    public ResponseEntity<DonationRequestDto> partialUpdateDonation(
+    public ResponseEntity<DonationDto> partialUpdateDonation(
             @PathVariable("id") Long donationId,
-            @RequestBody DonationRequestDto donationRequestDto
+            @RequestBody DonationDto donationDto
     ) {
         if (!donationService.isExists(donationId))
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
-        donationRequestDto.setDonationId(donationId);
-        DonationRequestDto savedDonationRequestDto = donationService.partialUpdate(donationId, donationRequestDto);
-        return new ResponseEntity<>(savedDonationRequestDto, HttpStatus.OK);
+        donationDto.setDonationId(donationId);
+        DonationDto savedDonationDto = donationService.partialUpdate(donationId, donationDto);
+        return new ResponseEntity<>(savedDonationDto, HttpStatus.OK);
     }
 
     @DeleteMapping(path = "/{id}")

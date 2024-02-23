@@ -1,6 +1,7 @@
 package com.thatsgoodmoney.selectelhackbe.domain.entities;
 
 import jakarta.persistence.*;
+import jakarta.persistence.criteria.CriteriaBuilder.In;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,19 +24,12 @@ public class BloodStationEntity {
     @JoinColumn(name = "city_id", nullable = false)
     private CityEntity city;
     private String hasBloodGroup;
-    @OneToMany(mappedBy = "bloodStationEntity", cascade = CascadeType.ALL)
-    private List<Schedule> schedule;
-    @OneToMany(mappedBy = "bloodStationEntity", cascade = CascadeType.ALL)
-    private List<PhoneNumber> phoneNumbers;
     private Double lat;
     private Double lng;
-//    @Type(type = "jsonb")
-//    @Column(columnDefinition = "jsonb")
-//    private List<String> bloodGroup;
     private String bloodStatus;
     private String title;
     private String parserUrl;
-    private boolean isGetFromParser;
+    private Boolean isGetFromParser;
     private String oPlus;
     private String oMinus;
     private String aPlus;
@@ -54,9 +48,9 @@ public class BloodStationEntity {
     private String phones;
     private String email;
     private String worktime;
-    private boolean withoutRegistration;
-    private boolean withTyping;
-    private boolean forMoscow;
-    private boolean closed;
-    private int priority;
+    private Boolean withoutRegistration;
+    private Boolean withTyping;
+    private Boolean forMoscow;
+    private Boolean closed;
+    private Integer priority;
 }
