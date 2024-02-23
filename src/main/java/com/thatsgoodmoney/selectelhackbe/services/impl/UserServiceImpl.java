@@ -32,6 +32,7 @@ public class UserServiceImpl implements UserService {
     public UserDto save(UserDto userDto) {
         UserEntity userEntity = userMapper.mapFrom(userDto);
         userEntity.setPassword(MapperConfig.encoder().encode(userEntity.getPassword()));
+
         return userMapper.mapTo(userRepository.save(userEntity));
     }
 

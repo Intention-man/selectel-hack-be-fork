@@ -1,6 +1,6 @@
 package com.thatsgoodmoney.selectelhackbe.controllers;
 
-import com.thatsgoodmoney.selectelhackbe.domain.dto.PointDto;
+import com.thatsgoodmoney.selectelhackbe.domain.dto.DonationDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +15,7 @@ import java.util.List;
 @CrossOrigin
 public class CheckController {
     @GetMapping(path = "/health-check")
-    public ResponseEntity<List<PointDto>> healthCheck() {
+    public ResponseEntity<List<DonationDto>> healthCheck() {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
