@@ -34,6 +34,7 @@ public class UserController {
 
     @PatchMapping(path = "/users/{user_id}")
     public ResponseEntity<UserDto> partialUpdateUser(
+//            @RequestAttribute Long userId,
             @PathVariable("user_id") Long userId,
             @RequestBody UserDto userDto
     ) {

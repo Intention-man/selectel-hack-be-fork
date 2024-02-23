@@ -24,16 +24,19 @@ public class RequestInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         try {
+            System.out.println("preHandle");
             if (shouldFilter(request)) {
                 final String token = getTokenFromRequest(request);
                 Long idFromStorage = authService.userIdFromStorage(token);
                 Long idFromToken = authService.userIdFromToken(token);
                 if (token.equals(EMPTY_TOKEN) || idFromStorage == -1L || !idFromStorage.equals(idFromToken)) {
+                    System.out.println("smth wrong with token");
                     response.setStatus(403);
                     return false;
                 }
                 request.setAttribute("userId", idFromToken);
             }
+            System.out.println("all correct");
             return true;
         } catch (JwtException e) {
             response.setStatus(403);

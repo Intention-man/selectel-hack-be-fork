@@ -3,7 +3,7 @@ package com.thatsgoodmoney.selectelhackbe.controllers;
 
 import com.thatsgoodmoney.selectelhackbe.domain.dto.LoginDto;
 import com.thatsgoodmoney.selectelhackbe.domain.dto.UserDto;
-import com.thatsgoodmoney.selectelhackbe.security.JwtResponse;
+import com.thatsgoodmoney.selectelhackbe.security.AuthResponse;
 import com.thatsgoodmoney.selectelhackbe.services.AuthService;
 import com.thatsgoodmoney.selectelhackbe.services.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -24,24 +24,24 @@ public class AuthController {
     private final UserServiceImpl userService;
 
     @PostMapping("/login")
-    public ResponseEntity<JwtResponse> login(@RequestBody LoginDto loginDto) {
+    public ResponseEntity<AuthResponse> login(@RequestBody LoginDto loginDto) {
         final Optional<UserDto> optionalUser = userService.findByLogin(loginDto.getEmail());
         HttpStatus authStatus = authService.tryAuth(loginDto, optionalUser);
         if (authStatus == HttpStatus.OK && optionalUser.isPresent()) {
             String token = authService.addTokenForUser(optionalUser.get());
-            return new ResponseEntity<>(new JwtResponse(token), authStatus);
+            return new ResponseEntity<>(new AuthResponse(token, optionalUser.get()), authStatus);
         }
         return new ResponseEntity<>(authStatus);
     }
 
     @PostMapping("/registration")
-    public ResponseEntity<JwtResponse> registration(@RequestBody UserDto userDto) {
+    public ResponseEntity<AuthResponse> registration(@RequestBody UserDto userDto) {
         if (userService.isUserExists(userDto))
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         if (!userService.isLoginAndPasswordValid(userDto))
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         UserDto savedUser = userService.save(userDto);
         String token = authService.addTokenForUser(savedUser);
-        return new ResponseEntity<>(new JwtResponse(token), HttpStatus.CREATED);
+        return new ResponseEntity<>(new AuthResponse(token, savedUser), HttpStatus.CREATED);
     }
 }
