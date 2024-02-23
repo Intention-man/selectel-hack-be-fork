@@ -1,9 +1,9 @@
 package com.thatsgoodmoney.selectelhackbe.controllers;
 
 import com.thatsgoodmoney.selectelhackbe.domain.dto.PointDto;
-import com.thatsgoodmoney.selectelhackbe.services.PointService;
-import com.thatsgoodmoney.selectelhackbe.services.UserService;
-import com.thatsgoodmoney.selectelhackbe.services.impl.AuthService;
+import com.thatsgoodmoney.selectelhackbe.services.AuthService;
+import com.thatsgoodmoney.selectelhackbe.services.PointServiceImpl;
+import com.thatsgoodmoney.selectelhackbe.services.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,8 +16,8 @@ import java.util.Optional;
 @CrossOrigin
 @RequiredArgsConstructor
 public class PointController {
-    private final PointService pointService;
-    private final UserService userService;
+    private final PointServiceImpl pointService;
+    private final UserServiceImpl userService;
     private final AuthService authService;
 
     @PostMapping(path = "/points")
@@ -31,7 +31,7 @@ public class PointController {
     }
 
     @GetMapping(path = "/points")
-    public ResponseEntity<List<PointDto>> listUsersPoints(
+    public ResponseEntity<List<PointDto>> listPointsPoints(
             @RequestAttribute Long userId)
     {
         return new ResponseEntity<>(pointService.findAllUserPoints(userId), HttpStatus.OK);

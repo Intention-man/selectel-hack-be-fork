@@ -1,6 +1,6 @@
 package com.thatsgoodmoney.selectelhackbe.security;
 
-import com.thatsgoodmoney.selectelhackbe.services.impl.AuthService;
+import com.thatsgoodmoney.selectelhackbe.services.AuthService;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -18,7 +18,7 @@ public class RequestInterceptor implements HandlerInterceptor {
     private final AuthService authService;
     private static final String AUTHORIZATION = "authorization";
     private static final String EMPTY_TOKEN = "";
-    private final Set<String> methodsToFilter = Set.of("GET", "POST", "PUT", "DELETE");
+    private final Set<String> methodsToFilter = Set.of("GET", "POST", "PUT", "PATCH", "DELETE");
     private final Set<String> filterIgnorePaths = Set.of("/login", "/registration", "/health-check");
 
     @Override
@@ -48,7 +48,7 @@ public class RequestInterceptor implements HandlerInterceptor {
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) {
         response.addHeader("Access-Control-Allow-Headers", "origin, content-type, accept, authorization");
         response.addHeader("Access-Control-Allow-Credentials", "true");
-        response.addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD");
+        response.addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS, HEAD");
         response.addHeader("Access-Control-Max-Age", "1209600");
     }
 

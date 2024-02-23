@@ -1,7 +1,9 @@
-package com.thatsgoodmoney.selectelhackbe.services.impl;
+package com.thatsgoodmoney.selectelhackbe.services;
 
 import com.thatsgoodmoney.selectelhackbe.config.MapperConfig;
+import com.thatsgoodmoney.selectelhackbe.domain.dto.LoginDto;
 import com.thatsgoodmoney.selectelhackbe.domain.dto.UserDto;
+import com.thatsgoodmoney.selectelhackbe.mappers.impl.UserMapperImpl;
 import com.thatsgoodmoney.selectelhackbe.security.JwtDecoder;
 import com.thatsgoodmoney.selectelhackbe.security.JwtProvider;
 import io.jsonwebtoken.Claims;
@@ -19,12 +21,12 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AuthService {
     @Getter
-    private final Map<String, Long> tokenStorage = new HashMap<>(); // token - userId
+    private final Map<String, Long> tokenStorage = new HashMap<>(); // token -> userId
     private final JwtProvider jwtProvider;
     private final JwtDecoder jwtDecoder;
+    private final UserMapperImpl userMapper;
 
-    public HttpStatus tryAuth(@NonNull UserDto userCredentials, Optional<UserDto> optionalUser) {
-
+    public HttpStatus tryAuth(@NonNull LoginDto userCredentials, Optional<UserDto> optionalUser) {
         if (optionalUser.isEmpty())
             return HttpStatus.NOT_FOUND;
 
@@ -34,10 +36,14 @@ public class AuthService {
         return HttpStatus.FORBIDDEN;
     }
 
-    public String addTokenForUser(UserDto foundUser){
+    public String addTokenForUser(LoginDto foundUser) {
         final String accessToken = jwtProvider.generateAccessToken(foundUser);
         tokenStorage.put(accessToken, foundUser.getUserId());
         return accessToken;
+    }
+
+    public String addTokenForUser(UserDto userDto) {
+        return addTokenForUser(userMapper.userDtoToLoginDto(userDto));
     }
 
     public Long userIdFromStorage(String rawToken) {
