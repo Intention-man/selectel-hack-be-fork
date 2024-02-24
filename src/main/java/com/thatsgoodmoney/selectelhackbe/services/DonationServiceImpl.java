@@ -1,25 +1,27 @@
 package com.thatsgoodmoney.selectelhackbe.services;
 
-import com.thatsgoodmoney.selectelhackbe.domain.dto.BloodTypesDto;
-import com.thatsgoodmoney.selectelhackbe.domain.dto.DonationDto;
-import com.thatsgoodmoney.selectelhackbe.domain.dto.DonationPlanDto;
+import com.thatsgoodmoney.selectelhackbe.domain.dto.*;
 import com.thatsgoodmoney.selectelhackbe.domain.entities.DonationEntity;
 import com.thatsgoodmoney.selectelhackbe.domain.entities.DonationPlanEntity;
+import com.thatsgoodmoney.selectelhackbe.domain.entities.UserEntity;
 import com.thatsgoodmoney.selectelhackbe.mappers.Mapper;
+import com.thatsgoodmoney.selectelhackbe.mappers.UserMapperImpl;
 import com.thatsgoodmoney.selectelhackbe.repositories.DonationRepository;
+import com.thatsgoodmoney.selectelhackbe.repositories.UserRepository;
 import lombok.AllArgsConstructor;
+import org.apache.catalina.User;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.StreamSupport;
 
 @Service
 @AllArgsConstructor
 public class DonationServiceImpl implements DonationService {
     private final DonationRepository donationRepository;
+    private final UserRepository userRepository;
     private final Mapper<DonationEntity, DonationDto> donationMapper;
+    private final UserMapperImpl userMapper;
 
     @Override
     public DonationDto save(DonationDto donationDto) {
@@ -61,6 +63,21 @@ public class DonationServiceImpl implements DonationService {
         long blood = types.getBlood();
         long plasma = types.getPlasma();
         return (blood >= 40) || (plasma >= 60) || (blood >= 25 && (plasma + blood) >= 40) || (blood < 25 && (plasma + blood) >= 60);
+    }
+
+    public List<UserTopDto> getUsersTop() {
+        List<UserDto> users = ((List<UserEntity>) userRepository.findAll())
+                .stream().map(userMapper::entityToUserDto).toList();
+        List<UserTopDto> top = new ArrayList<>();
+        for (UserDto user: users) {
+            BloodTypesDto bloodTypesDto = findUsersDonationsByType(user.getUserId());
+            UserTopDto userTopDto = new UserTopDto(bloodTypesDto);
+            userTopDto.setUserId(user.getUserId());
+            userTopDto.setFirstName(user.getFirstName());
+            top.add(userTopDto);
+        }
+        top.sort(Comparator.comparingLong(UserTopDto::getCount).reversed());
+        return top;
     }
 
     @Override
