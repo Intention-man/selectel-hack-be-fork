@@ -1,3 +1,4 @@
 /target
+/uploads
 .idea
 src/main/resources/application-dev.properties
