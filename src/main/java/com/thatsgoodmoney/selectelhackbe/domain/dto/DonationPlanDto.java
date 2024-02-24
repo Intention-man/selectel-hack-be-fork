@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 @Builder
 public class DonationPlanDto {
     private Long donationPlanId;
-    private BloodStationDto bloodStationDto;
-    private UserDto userDto;
+    private Long userId;
+    private Long bloodStationId;
     private String bloodClass;
     private String planDate;
     private String paymentType;

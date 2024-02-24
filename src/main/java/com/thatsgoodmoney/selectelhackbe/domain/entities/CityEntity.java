@@ -18,13 +18,8 @@ public class CityEntity {
     private Long cityId;
     private String title;
     private String slug;
-
-    @ManyToOne
-    @JoinColumn(name = "region_id", nullable = false)
-    private RegionEntity region;
-    @ManyToOne
-    @JoinColumn(name = "country_id", nullable = false)
-    private CountryEntity country;
+    private Long regionId;
+    private Long countryId;
     private Integer priority;
     private Double lat;
     private Double lng;

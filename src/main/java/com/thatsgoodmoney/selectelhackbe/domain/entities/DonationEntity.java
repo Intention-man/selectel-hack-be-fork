@@ -17,13 +17,8 @@ public class DonationEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long donationId;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private UserEntity user;
-
-    @ManyToOne
-    @JoinColumn(name = "blood_station_id", nullable = false)
-    private BloodStationEntity bloodStation;
+    private Long userId;
+    private Long bloodStationId;
 
     private String firstName;
     private String lastName;

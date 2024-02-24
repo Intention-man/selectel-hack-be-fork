@@ -37,7 +37,7 @@ public class DonationPlanService {
     public DonationPlanDto findClosestPlanByUser(Long userId) {
         List<DonationPlanDto> usersDonationPlans = ((List<DonationPlanEntity>) donationPlanRepository.findAll())
                 .stream()
-                .filter(donationPlanEntity -> Objects.equals(donationPlanEntity.getUser().getUserId(), userId))
+                .filter(donationPlanEntity -> Objects.equals(donationPlanEntity.getUserId(), userId))
                 .map(mapper::mapTo).toList();
         LocalDate currentDate = LocalDate.now();
         long minDifference = Long.MAX_VALUE;
@@ -64,7 +64,7 @@ public class DonationPlanService {
             Optional.of(donationPlanDto.getPlanDate()).ifPresent(existingDonationPlanDto::setPlanDate);
             Optional.of(donationPlanDto.getPaymentType()).ifPresent(existingDonationPlanDto::setPaymentType);
             Optional.of(donationPlanDto.getIsOut()).ifPresent(existingDonationPlanDto::setIsOut);
-            Optional.of(donationPlanDto.getBloodStationDto()).ifPresent(existingDonationPlanDto::setBloodStationDto);
+            Optional.of(donationPlanDto.getBloodStationId()).ifPresent(existingDonationPlanDto::setBloodStationId);
             return mapper.mapTo(donationPlanRepository.save(mapper.mapFrom(existingDonationPlanDto)));
         }).orElseThrow(() -> new RuntimeException("Donation Plan doesn't exist"));
     }

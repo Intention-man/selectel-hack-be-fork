@@ -30,7 +30,7 @@ public class DonationServiceImpl implements DonationService {
     @Override
     public List<DonationDto> findAllUserDonations(Long userId) {
         return StreamSupport.stream(donationRepository.findAll().spliterator(), false)
-                .filter(donationEntity -> Objects.equals(donationEntity.getUser().getUserId(), userId))
+                .filter(donationEntity -> Objects.equals(donationEntity.getUserId(), userId))
                 .map(donationMapper::mapTo).toList();
     }
 
@@ -43,7 +43,7 @@ public class DonationServiceImpl implements DonationService {
     public BloodTypesDto findUsersDonationsByType(Long userId) {
         List<DonationDto> usersDonations = ((List<DonationEntity>) donationRepository.findAll())
                 .stream()
-                .filter(donationEntity -> Objects.equals(donationEntity.getUser().getUserId(), userId))
+                .filter(donationEntity -> Objects.equals(donationEntity.getUserId(), userId))
                 .map(donationMapper::mapTo).toList();
         BloodTypesDto types = new BloodTypesDto();
         for (DonationDto donationDto: usersDonations) {
@@ -83,7 +83,7 @@ public class DonationServiceImpl implements DonationService {
             Optional.of(donationDto.getDonateAt()).ifPresent(existingDonationDto::setDonateAt);
             Optional.of(donationDto.getPaymentType()).ifPresent(existingDonationDto::setPaymentType);
             Optional.of(donationDto.getIsOut()).ifPresent(existingDonationDto::setIsOut);
-            Optional.of(donationDto.getBloodStationDto()).ifPresent(existingDonationDto::setBloodStationDto);
+            Optional.of(donationDto.getBloodStationId()).ifPresent(existingDonationDto::setBloodStationId);
             Optional.of(donationDto.getWithImage()).ifPresent(existingDonationDto::setWithImage);
             return donationMapper.mapTo(donationRepository.save(donationMapper.mapFrom(existingDonationDto)));
         }).orElseThrow(() -> new RuntimeException("Donation doesn't exists"));

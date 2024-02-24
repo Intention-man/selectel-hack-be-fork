@@ -13,8 +13,8 @@ public class CityDto {
     private Long cityId;
     private String title;
     private String slug;
-    private RegionDto regionDto;
-    private CountryDto countryDto;
+    private Long regionId;
+    private Long countryId;
     private Integer priority;
     private Double lat;
     private Double lng;

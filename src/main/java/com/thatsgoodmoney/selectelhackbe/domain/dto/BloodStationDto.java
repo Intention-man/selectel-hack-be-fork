@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class BloodStationDto {
     private Long bloodStationId;
-    private CityDto cityDto;
+    private Long cityId;
     private String hasBloodGroup;
     private Double lat;
     private Double lng;

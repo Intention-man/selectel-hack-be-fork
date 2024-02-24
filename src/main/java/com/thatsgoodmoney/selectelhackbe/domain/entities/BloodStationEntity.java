@@ -1,14 +1,10 @@
 package com.thatsgoodmoney.selectelhackbe.domain.entities;
 
 import jakarta.persistence.*;
-import jakarta.persistence.criteria.CriteriaBuilder.In;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Type;
-
-import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -20,9 +16,7 @@ public class BloodStationEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long bloodStationId;
-    @ManyToOne
-    @JoinColumn(name = "city_id", nullable = false)
-    private CityEntity city;
+    private Long cityId;
     private String hasBloodGroup;
     private Double lat;
     private Double lng;
