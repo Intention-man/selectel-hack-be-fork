@@ -55,6 +55,11 @@ public class DonationController {
         return new ResponseEntity<>(donationService.findUsersDonationsByType(userId), HttpStatus.OK);
     }
 
+    @GetMapping(path = "/is-honorary-donor")
+    public ResponseEntity<Boolean> getIsHonoraryDonor(@RequestAttribute Long userId) {
+        return new ResponseEntity<>(donationService.isHonoraryDonor(userId), HttpStatus.OK);
+    }
+
     @PutMapping(path = "/{id}")
     public ResponseEntity<DonationDto> save(
             @PathVariable("id") Long donationId,

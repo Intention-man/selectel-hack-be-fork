@@ -56,6 +56,13 @@ public class DonationServiceImpl implements DonationService {
         return types;
     }
 
+    public boolean isHonoraryDonor(Long userId) {
+        BloodTypesDto types = findUsersDonationsByType(userId);
+        long blood = types.getBlood();
+        long plasma = types.getPlasma();
+        return (blood >= 40) || (plasma >= 60) || (blood >= 25 && (plasma + blood) >= 40) || (blood < 25 && (plasma + blood) >= 60);
+    }
+
     @Override
     public boolean isExists(Long pointId) {
         return donationRepository.existsById(pointId);
