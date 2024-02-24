@@ -3,20 +3,17 @@ package com.thatsgoodmoney.selectelhackbe.controllers;
 import com.thatsgoodmoney.selectelhackbe.domain.dto.BloodTypesDto;
 import com.thatsgoodmoney.selectelhackbe.domain.dto.DonationDto;
 import com.thatsgoodmoney.selectelhackbe.services.DonationServiceImpl;
-import com.thatsgoodmoney.selectelhackbe.services.FileStorageService;
+import com.thatsgoodmoney.selectelhackbe.services.ImageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.FileInputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,14 +25,16 @@ import java.util.Optional;
 @RequestMapping("/donations")
 public class DonationController {
     private final DonationServiceImpl donationService;
-    private final FileStorageService fileStorageService;
+    private final ImageService imageService;
 
     @PostMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<DonationDto> createDonation(
             @RequestPart("donationDto") DonationDto donationDto,
             @RequestPart(name = "file", required = false) MultipartFile file) {
         DonationDto savedDonationDto = donationService.save(donationDto);
-        if (file != null) fileStorageService.storeFile(file);
+        if (file != null) {
+            savedDonationDto.setImageId(imageService.storeFile(file));
+        }
         return new ResponseEntity<>(savedDonationDto, HttpStatus.CREATED);
     }
 
@@ -72,32 +71,36 @@ public class DonationController {
         return new ResponseEntity<>(donationService.isHonoraryDonor(userId), HttpStatus.OK);
     }
 
-    @PutMapping(path = "/{id}")
+    @PutMapping(path = "/{id}", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<DonationDto> save(
             @PathVariable("id") Long donationId,
-            @RequestBody DonationDto donationDto,
-            @RequestParam("file") MultipartFile file
+            @RequestPart("donationDto") DonationDto donationDto,
+            @RequestPart(name = "file", required = false) MultipartFile file
     ) {
         donationDto.setDonationId(donationId);
+        if (file != null) {
+            donationDto.setImageId(imageService.storeFile(file));
+        }
         DonationDto savedUpdatedDonation = donationService.save(donationDto);
-        if (file != null) fileStorageService.storeFile(file);
         if (donationService.isExists(donationId))
             return new ResponseEntity<>(savedUpdatedDonation, HttpStatus.OK);
 
         return new ResponseEntity<>(savedUpdatedDonation, HttpStatus.CREATED);
     }
 
-    @PatchMapping(path = "/{id}")
+    @PatchMapping(path = "/{id}", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<DonationDto> partialUpdateDonation(
             @PathVariable("id") Long donationId,
-            @RequestBody DonationDto donationDto,
-            @RequestParam("file") MultipartFile file
+            @RequestPart("donationDto") DonationDto donationDto,
+            @RequestPart(name = "file", required = false) MultipartFile file
     ) {
         if (!donationService.isExists(donationId))
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
         donationDto.setDonationId(donationId);
-        if (file != null) fileStorageService.storeFile(file);
+        if (file != null) {
+            donationDto.setImageId(imageService.storeFile(file));
+        }
         DonationDto savedDonationDto = donationService.partialUpdate(donationId, donationDto);
         return new ResponseEntity<>(savedDonationDto, HttpStatus.OK);
     }
@@ -110,10 +113,11 @@ public class DonationController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    // заглушка
     @GetMapping(path = "/get_file")
     public ResponseEntity<Resource> getFile() {
         String fileName = "file.txt";
-        ByteArrayResource resource = fileStorageService.loadFileAsResource(fileName);
+        ByteArrayResource resource = imageService.loadFileAsResource(fileName);
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"");
         return ResponseEntity.ok()
