@@ -1,7 +1,6 @@
 package com.thatsgoodmoney.selectelhackbe.services;
 
 import com.thatsgoodmoney.selectelhackbe.domain.dto.DonationDto;
-import com.thatsgoodmoney.selectelhackbe.domain.dto.DonationPlanDto;
 import com.thatsgoodmoney.selectelhackbe.domain.entities.DonationEntity;
 import com.thatsgoodmoney.selectelhackbe.mappers.Mapper;
 import com.thatsgoodmoney.selectelhackbe.repositories.DonationRepository;
@@ -37,6 +36,10 @@ public class DonationServiceImpl implements DonationService {
         Optional<DonationEntity> optionalDonationDto = donationRepository.findById(donationId);
         return optionalDonationDto.map(donationMapper::mapTo);
     }
+
+//    public BloodTypesDto findUsersDonationsByType(Long userId) {
+//
+//    }
 
     @Override
     public boolean isExists(Long pointId) {

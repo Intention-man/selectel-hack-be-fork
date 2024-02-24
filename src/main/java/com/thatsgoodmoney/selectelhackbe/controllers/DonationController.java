@@ -49,6 +49,11 @@ public class DonationController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+//    @GetMapping(path = "/donations_by_type")
+//    public ResponseEntity<BloodTypesDto> getUsersDonationsByType(@RequestAttribute Long userId) {
+//
+//    }
+
     @PutMapping(path = "/{id}")
     public ResponseEntity<DonationDto> save(
             @PathVariable("id") Long donationId,
