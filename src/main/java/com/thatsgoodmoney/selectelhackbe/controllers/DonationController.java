@@ -1,7 +1,8 @@
 package com.thatsgoodmoney.selectelhackbe.controllers;
 
+import com.thatsgoodmoney.selectelhackbe.domain.dto.BloodTypesDto;
 import com.thatsgoodmoney.selectelhackbe.domain.dto.DonationDto;
-import com.thatsgoodmoney.selectelhackbe.services.DonationService;
+import com.thatsgoodmoney.selectelhackbe.services.DonationServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @RequestMapping("/donations")
 public class DonationController {
-    private final DonationService donationService;
+    private final DonationServiceImpl donationService;
 
     @PostMapping
     public ResponseEntity<DonationDto> createDonation(
@@ -49,10 +50,10 @@ public class DonationController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-//    @GetMapping(path = "/donations_by_type")
-//    public ResponseEntity<BloodTypesDto> getUsersDonationsByType(@RequestAttribute Long userId) {
-//
-//    }
+    @GetMapping(path = "/by_type")
+    public ResponseEntity<BloodTypesDto> getUsersDonationsByType(@RequestAttribute Long userId) {
+        return new ResponseEntity<>(donationService.findUsersDonationsByType(userId), HttpStatus.OK);
+    }
 
     @PutMapping(path = "/{id}")
     public ResponseEntity<DonationDto> save(

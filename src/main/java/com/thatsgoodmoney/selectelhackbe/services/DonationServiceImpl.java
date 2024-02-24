@@ -1,7 +1,10 @@
 package com.thatsgoodmoney.selectelhackbe.services;
 
+import com.thatsgoodmoney.selectelhackbe.domain.dto.BloodTypesDto;
 import com.thatsgoodmoney.selectelhackbe.domain.dto.DonationDto;
+import com.thatsgoodmoney.selectelhackbe.domain.dto.DonationPlanDto;
 import com.thatsgoodmoney.selectelhackbe.domain.entities.DonationEntity;
+import com.thatsgoodmoney.selectelhackbe.domain.entities.DonationPlanEntity;
 import com.thatsgoodmoney.selectelhackbe.mappers.Mapper;
 import com.thatsgoodmoney.selectelhackbe.repositories.DonationRepository;
 import lombok.AllArgsConstructor;
@@ -37,9 +40,21 @@ public class DonationServiceImpl implements DonationService {
         return optionalDonationDto.map(donationMapper::mapTo);
     }
 
-//    public BloodTypesDto findUsersDonationsByType(Long userId) {
-//
-//    }
+    public BloodTypesDto findUsersDonationsByType(Long userId) {
+        List<DonationDto> usersDonations = ((List<DonationEntity>) donationRepository.findAll())
+                .stream()
+                .filter(donationEntity -> Objects.equals(donationEntity.getUser().getUserId(), userId))
+                .map(donationMapper::mapTo).toList();
+        BloodTypesDto types = new BloodTypesDto();
+        for (DonationDto donationDto: usersDonations) {
+            if (donationDto.getBloodClass().equals("blood")) types.incBlood();
+            if (donationDto.getBloodClass().equals("plasma")) types.incPlasma();
+            if (donationDto.getBloodClass().equals("platelets")) types.incPlatelets();
+            if (donationDto.getBloodClass().equals("erythrocytes")) types.incErythrocytes();
+            if (donationDto.getBloodClass().equals("granulocytes")) types.incGranulocytes();
+        }
+        return types;
+    }
 
     @Override
     public boolean isExists(Long pointId) {
