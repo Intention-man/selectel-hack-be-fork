@@ -2,6 +2,7 @@ package com.thatsgoodmoney.selectelhackbe.controllers;
 
 import com.thatsgoodmoney.selectelhackbe.domain.dto.BloodTypesDto;
 import com.thatsgoodmoney.selectelhackbe.domain.dto.DonationDto;
+import com.thatsgoodmoney.selectelhackbe.domain.dto.UserTopDto;
 import com.thatsgoodmoney.selectelhackbe.services.DonationServiceImpl;
 import com.thatsgoodmoney.selectelhackbe.services.ImageService;
 import lombok.RequiredArgsConstructor;
@@ -69,6 +70,11 @@ public class DonationController {
     @GetMapping(path = "/is-honorary-donor")
     public ResponseEntity<Boolean> getIsHonoraryDonor(@RequestAttribute Long userId) {
         return new ResponseEntity<>(donationService.isHonoraryDonor(userId), HttpStatus.OK);
+    }
+
+    @GetMapping(path = "/top")
+    public ResponseEntity<List<UserTopDto>> getTopUsers() {
+        return new ResponseEntity<>(donationService.getUsersTop(), HttpStatus.OK);
     }
 
     @PutMapping(path = "/{id}", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
