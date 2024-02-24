@@ -43,9 +43,4 @@ public class AuthController {
         return new ResponseEntity<>(new AuthResponse(token, savedUser), HttpStatus.CREATED);
     }
 
-//    @PostMapping("/check-token")
-//    public ResponseEntity<HttpStatus> checkToken() {
-//        return
-//    }
-
 }

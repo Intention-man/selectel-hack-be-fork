@@ -56,7 +56,7 @@ public class UserServiceImpl {
         userDto.setUserId(userId);
         return userRepository.findById(userId).map(existingUser -> {
             Optional.ofNullable(userDto.getEmail()).ifPresent(existingUser::setEmail);
-            Optional.ofNullable(userDto.getPassword()).ifPresent(existingUser::setPassword);
+            Optional.ofNullable(MapperConfig.encoder().encode(userDto.getPassword())).ifPresent(existingUser::setPassword);
             Optional.ofNullable(userDto.getFirstName()).ifPresent(existingUser::setFirstName);
             Optional.ofNullable(userDto.getTag()).ifPresent(existingUser::setTag);
             Optional.ofNullable(userDto.getCity()).ifPresent(existingUser::setCity);
