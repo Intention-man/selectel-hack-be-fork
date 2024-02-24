@@ -37,6 +37,13 @@ public class DonationPlanController {
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
+    @GetMapping(path = "/closest")
+    public ResponseEntity<DonationPlanDto> getClosestDonation(
+            @RequestAttribute Long userId) {
+        DonationPlanDto foundDonationPlan = donationPlanService.findClosestPlanByUser(userId);
+        return foundDonationPlan == null ? new ResponseEntity<>(HttpStatus.NOT_FOUND) : new ResponseEntity<>(foundDonationPlan, HttpStatus.OK);
+    }
+
     @PutMapping(path = "/{id}")
     public ResponseEntity<DonationPlanDto> save(
             @PathVariable("id") Long donationPlanId,

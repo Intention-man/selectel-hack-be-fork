@@ -17,11 +17,11 @@ public class DonationEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long donationId;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "blood_station_id", nullable = false)
     private BloodStationEntity bloodStation;
 

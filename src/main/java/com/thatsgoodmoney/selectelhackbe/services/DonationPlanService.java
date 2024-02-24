@@ -7,7 +7,10 @@ import com.thatsgoodmoney.selectelhackbe.repositories.DonationPlanRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -31,6 +34,24 @@ public class DonationPlanService {
         return optionalDonationPlanDto.map(mapper::mapTo);
     }
 
+    public DonationPlanDto findClosestPlanByUser(Long userId) {
+        List<DonationPlanDto> usersDonationPlans = ((List<DonationPlanEntity>) donationPlanRepository.findAll())
+                .stream()
+                .filter(donationPlanEntity -> Objects.equals(donationPlanEntity.getUser().getUserId(), userId))
+                .map(mapper::mapTo).toList();
+        LocalDate currentDate = LocalDate.now();
+        long minDifference = Long.MAX_VALUE;
+        DonationPlanDto closestDonationPlan = null;
+        for (DonationPlanDto donationPlan: usersDonationPlans) {
+            LocalDate donationDate = LocalDate.parse(donationPlan.getPlanDate());
+            if (donationDate.isAfter(currentDate) && daysBetween(donationDate, currentDate) < minDifference) {
+                minDifference = daysBetween(donationDate, currentDate);
+                closestDonationPlan = donationPlan;
+            }
+        }
+        return closestDonationPlan;
+    }
+
     public boolean isExists(Long pointId) {
         return donationPlanRepository.existsById(pointId);
     }
@@ -50,6 +71,10 @@ public class DonationPlanService {
 
     public void delete(Long donationPlanId) {
         donationPlanRepository.deleteById(donationPlanId);
+    }
+
+    private long daysBetween(LocalDate ld1, LocalDate ld2) {
+        return Math.abs(ChronoUnit.DAYS.between(ld1, ld2));
     }
 
 }
